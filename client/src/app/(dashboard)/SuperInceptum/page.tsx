@@ -25,7 +25,7 @@ const colors = {
 
 const PageSuperInceptum = () => {
   return (
-    <div className="p-4 flex gap-4 flex-col md:flex-row">
+    <div className="p-6 flex gap-4 flex-col md:flex-row">
       <div className="w-full ">
         {/* USER CARD */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
