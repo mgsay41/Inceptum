@@ -1,10 +1,11 @@
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
-import { role, teachersData } from "@/lib/data";
+import { role, studentsData } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { Eye, Trash2, FileUser } from "lucide-react";
 
 type Teacher = {
   id: number;
@@ -70,21 +71,25 @@ const SubAdminListPage = () => {
         </td>
         <td className="hidden md:table-cell">{items.teacherID}</td>
         <td className="hidden md:table-cell">{items.subject}</td>
-        <td className="hidden md:table-cell">{items.classes}</td>
-        <td className="hidden md:table-cell">{items.phone}</td>
-        <td className="hidden md:table-cell">{items.email}</td>
+        {/*Professional level*/}
+        <td className="hidden md:table-cell">{items.classes}</td> {/*rating*/}
+        <td className="hidden md:table-cell">{items.classes}</td> {/*rating*/}
+        <td className="hidden md:table-cell">{items.phone}</td> {/*cv*/}
         <td>
           <div className="flex items-center gap-2">
             <Link href={`/list/teachers/${items.id}`}>
               <button className="w-7 h-7 flex items-center justify-center rounded-full ">
-                <Image src="/view.png" alt="view" width={16} height={16} />
+                <Eye width={16} height={16} />
               </button>
             </Link>
             {role === "admin" && (
               <button className="w-7 h-7 flex items-center justify-center rounded-full ">
-                <Image src="/delete.png" alt="view" width={16} height={16} />
+                <Trash2 width={16} height={16} />
               </button>
             )}
+            <button className="w-7 h-7 flex items-center justify-center rounded-full ">
+              <FileUser width={16} height={16} />
+            </button>
           </div>
         </td>
       </tr>
@@ -121,15 +126,17 @@ const SubAdminListPage = () => {
                 className="mr-2"
               />
             </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-full ">
-              <Image
-                src="/plus.png"
-                alt="plus"
-                width={14}
-                height={14}
-                className="mr-2"
-              />
-            </button>
+            {role === "admin" && (
+              <button className="w-8 h-8 flex items-center justify-center rounded-full ">
+                <Image
+                  src="/plus.png"
+                  alt="plus"
+                  width={14}
+                  height={14}
+                  className="mr-2"
+                />
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -137,7 +144,7 @@ const SubAdminListPage = () => {
       {/* LIST SECTION */}
 
       <div className="">
-        <Table columns={columns} renderRow={renderRow} data={teachersData} />
+        <Table columns={columns} renderRow={renderRow} data={studentsData} />
       </div>
 
       {/* PAGINATION SECTION */}
