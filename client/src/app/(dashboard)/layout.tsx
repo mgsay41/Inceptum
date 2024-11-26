@@ -10,7 +10,7 @@ export default function DashboardLayout({
 }>) {
   return (
     <div className="h-screen flex">
-      {/*LEFT SIDEBAR*/}
+      {/* LEFT SIDEBAR */}
       <div className="w-1/6 md:w-1/12 lg:w-1/6 xl:w-1/6">
         <Link href="/" className="flex items-center justify-start pt-3 px-4">
           <Image
@@ -32,10 +32,16 @@ export default function DashboardLayout({
         </Link>
         <Menu />
       </div>
-      {/*MAIN CONTENT*/}
-      <div className="w-5/6 bg-[#F7F8FA] md:w-11/12 lg:w-5/6 xl:w-5/6 overflow-scroll">
-        <Navbar />
-        {children}
+
+      {/* MAIN CONTENT */}
+      <div className="w-5/6 bg-[#F7F8FA] md:w-11/12 lg:w-5/6 xl:w-5/6 flex flex-col">
+        {/* Navbar */}
+        <div className="sticky top-0 z-50">
+          <Navbar />
+        </div>
+
+        {/* Scrollable children */}
+        <div className="flex-1 overflow-y-auto scrollbar-hide">{children}</div>
       </div>
     </div>
   );
