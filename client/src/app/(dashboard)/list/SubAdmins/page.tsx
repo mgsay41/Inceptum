@@ -6,6 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { Eye, Trash2, FileUser } from "lucide-react";
+import { FaSortAmountDown, FaPlus } from "react-icons/fa";
+import { RiFilter2Line } from "react-icons/ri";
+import FormModal from "@/components/FormModal";
 
 type Teacher = {
   id: number;
@@ -77,19 +80,11 @@ const SubAdminListPage = () => {
         <td className="hidden md:table-cell">{items.phone}</td> {/*cv*/}
         <td>
           <div className="flex items-center gap-2">
-            <Link href={`/list/teachers/${items.id}`}>
-              <button className="w-7 h-7 flex items-center justify-center rounded-full ">
-                <Eye width={16} height={16} />
-              </button>
+            <Link href={`/list/SubAdmins/${items.id}`}>
+              <FormModal table="assistants" type="view" />
             </Link>
-            {role === "admin" && (
-              <button className="w-7 h-7 flex items-center justify-center rounded-full ">
-                <Trash2 width={16} height={16} />
-              </button>
-            )}
-            <button className="w-7 h-7 flex items-center justify-center rounded-full ">
-              <FileUser width={16} height={16} />
-            </button>
+            {role === "admin" && <FormModal table="assistants" type="delete" />}
+            <FormModal table="assistants" type="CV" />
           </div>
         </td>
       </tr>
@@ -108,35 +103,9 @@ const SubAdminListPage = () => {
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
           <div className="flex items-center gap-4 self-end">
-            <button className="w-8 h-8 flex items-center justify-center rounded-full ">
-              <Image
-                src="/filter.png"
-                alt="filter"
-                width={14}
-                height={14}
-                className="mr-2"
-              />
-            </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-full ">
-              <Image
-                src="/sort.png"
-                alt="sort"
-                width={14}
-                height={14}
-                className="mr-2"
-              />
-            </button>
-            {role === "admin" && (
-              <button className="w-8 h-8 flex items-center justify-center rounded-full ">
-                <Image
-                  src="/plus.png"
-                  alt="plus"
-                  width={14}
-                  height={14}
-                  className="mr-2"
-                />
-              </button>
-            )}
+            <FormModal table="assistants" type="filter" />
+            <FormModal table="assistants" type="sort" />
+            {role === "admin" && <FormModal table="assistants" type="create" />}
           </div>
         </div>
       </div>
