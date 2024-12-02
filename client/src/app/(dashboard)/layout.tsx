@@ -11,7 +11,7 @@ export default function DashboardLayout({
   return (
     <div className="h-screen flex">
       {/* LEFT SIDEBAR */}
-      <div className="w-1/6 md:w-1/12 lg:w-1/6 xl:w-1/6">
+      <div className="hidden md:block w-1/6 lg:w-1/6 xl:w-1/6 bg-white shadow-lg">
         <Link href="/" className="flex items-center justify-start pt-3 px-4">
           <Image
             src="/logo.png"
@@ -34,8 +34,7 @@ export default function DashboardLayout({
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="w-5/6 bg-[#F7F8FA] md:w-11/12 lg:w-5/6 xl:w-5/6 flex flex-col">
-        {/* Navbar */}
+      <div className=" bg-[#F7F8FA] w-full flex flex-col">
         <div className="sticky top-0 z-50">
           <Navbar />
         </div>

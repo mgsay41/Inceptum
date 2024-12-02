@@ -97,7 +97,6 @@ const AssistantListPage = () => {
           <div className="flex items-center gap-4 self-end">
             <FormModal table="assistants" type="filter" />
             <FormModal table="assistants" type="sort" />
-            {role === "admin" && <FormModal table="assistants" type="create" />}
           </div>
         </div>
       </div>

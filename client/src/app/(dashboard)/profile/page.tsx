@@ -29,7 +29,7 @@ interface ProfileData {
 }
 
 const profileData: ProfileData = {
-  role: "assistant", // Change this to 'instructor' or 'assistant' to see different profiles
+  role: "instructor", // Change this to 'instructor' or 'assistant' to see different profiles
   name: "Rafiqur Rahman",
   email: "rafiqurrahman51@gmail.com",
   phone: "+09 345 346 46",

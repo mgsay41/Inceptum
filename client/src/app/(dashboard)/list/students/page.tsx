@@ -76,7 +76,9 @@ const StudentListPage = () => {
             <Link href={`/list/students/${items.id}`}>
               <FormModal table="assistants" type="view" />
             </Link>
-            {role === "admin" && <FormModal table="assistants" type="delete" />}
+            {role === "admin" && (
+              <FormModal table="assistants" type="delete" id={items.id} />
+            )}
             <FormModal table="assistants" type="CV" />
           </div>
         </td>
@@ -95,7 +97,6 @@ const StudentListPage = () => {
           <div className="flex items-center gap-4 self-end">
             <FormModal table="assistants" type="filter" />
             <FormModal table="assistants" type="sort" />
-            {role === "admin" && <FormModal table="assistants" type="create" />}
           </div>
         </div>
       </div>

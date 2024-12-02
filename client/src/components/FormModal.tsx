@@ -6,6 +6,8 @@ import { IoIosClose } from "react-icons/io";
 import { LuEye } from "react-icons/lu";
 import { MdOutlineDeleteForever } from "react-icons/md";
 import { RiFileUserLine, RiFilter2Line } from "react-icons/ri";
+import DeleteConfirmationPopup from "./delete-confirmation-popup";
+import InstructorRegistrationForm from "./Forms/instructor-registration-form";
 
 // Define prop types
 type TableType =
@@ -47,6 +49,26 @@ const FormModal: React.FC<FormModalProps> = ({ table, type, data, id }) => {
 
   const [open, setOpen] = useState(false);
 
+  const handleDelete = () => {
+    console.log("Item deleted!");
+    setOpen(false);
+  };
+
+  const Form = () => {
+    return type === "delete" && id ? (
+      <DeleteConfirmationPopup
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onConfirm={handleDelete}
+        itemName="this important file"
+      />
+    ) : (
+      <div className="h-[80%] w-[40%] overflow-y-auto">
+        <InstructorRegistrationForm />
+      </div>
+    );
+  };
+
   return (
     <div>
       <button
@@ -64,18 +86,7 @@ const FormModal: React.FC<FormModalProps> = ({ table, type, data, id }) => {
             }
           }}
         >
-          <div
-            className="bg-white p-4 rounded-md relative w-[90%] md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div
-              className="absolute top-4 right-4 cursor-pointer"
-              onClick={() => setOpen(false)}
-            >
-              <IoIosClose className="w-8 h-8" />
-            </div>
-            Hello
-          </div>
+          <Form />
         </div>
       )}
     </div>
