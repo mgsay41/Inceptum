@@ -68,7 +68,7 @@ const Courses = () => {
       <div className="max-w-7xl mx-auto px-4 pb-20">
         {/* Header Section */}
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-gray-900">
             Available Courses
           </h1>
           <div className="flex gap-4">

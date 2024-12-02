@@ -62,7 +62,7 @@ export default function ProfilePage() {
   const { role } = profileData;
 
   return (
-    <div className="container max-w-5xl mx-auto p-4 pb-10 space-y-6">
+    <div className="container max-w-5xl mx-auto p-4 pb-20 space-y-6">
       <h1 className="text-xl font-semibold">My Profile</h1>
 
       <ProfileHeader data={profileData} />
