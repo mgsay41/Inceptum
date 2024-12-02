@@ -1,5 +1,7 @@
-import { Clock, Users, BookOpen } from "lucide-react";
+import { Clock, BookOpen } from "lucide-react";
+
 interface CourseCardProps {
+  id?: string; // Optional id
   title: string;
   description: string;
   instructor: string;
@@ -7,7 +9,9 @@ interface CourseCardProps {
   students: number;
   image: string;
 }
+
 const CourseCard = ({
+  id = "1", // Provide a default value if id is optional
   title,
   description,
   instructor,
@@ -28,17 +32,14 @@ const CourseCard = ({
               <span>{duration}</span>
             </div>
             <div className="flex items-center">
-              <Users className="h-4 w-4 mr-1" />
-              <span>{students} students</span>
+              <BookOpen className="h-4 w-4 text-[#ff005c] mr-2" />
+              <span className="text-sm text-gray-700">{instructor}</span>
             </div>
-          </div>
-          <div className="mt-4 flex items-center">
-            <BookOpen className="h-4 w-4 text-primary mr-2" />
-            <span className="text-sm text-gray-700">{instructor}</span>
           </div>
         </div>
       </div>
     </div>
   );
 };
+
 export default CourseCard;

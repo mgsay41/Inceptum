@@ -1,40 +1,41 @@
-import Image from "next/image";
+"use client"; // Mark this component as a Client Component
+
 import Link from "next/link";
 import React from "react";
+import { usePathname } from "next/navigation"; // Use usePathname instead of useRouter
+import {
+  FaHome,
+  FaBook,
+  FaClipboardList,
+  FaBell,
+  FaUser,
+  FaCog,
+  FaSignOutAlt,
+} from "react-icons/fa"; // Example icons from React Icons
 
 const menuItems = [
   {
     title: "MENU",
     items: [
       {
-        icon: "/home.png",
+        icon: <FaHome size={20} />, // Icon for Home
         label: "Home",
-        href: "/",
-        visible: ["admin", "teacher", "student", "parent"],
+        href: "/home",
       },
       {
-        icon: "/teacher.png",
-        label: "Teachers",
-        href: "/list/teachers",
-        visible: ["admin", "teacher"],
+        icon: <FaBook size={20} />, // Icon for Courses
+        label: "Courses",
+        href: "/courses",
       },
       {
-        icon: "/student.png",
-        label: "Students",
-        href: "/list/students",
-        visible: ["admin", "teacher"],
+        icon: <FaClipboardList size={20} />, // Icon for My Applications
+        label: "My Applications",
+        href: "/my-applications",
       },
       {
-        icon: "/subject.png",
-        label: "Subjects",
-        href: "/list/subjects",
-        visible: ["admin"],
-      },
-      {
-        icon: "/announcement.png",
-        label: "Announcements",
-        href: "/list/announcements",
-        visible: ["admin", "teacher", "student", "parent"],
+        icon: <FaBell size={20} />, // Icon for Notifications
+        label: "Notifications",
+        href: "/notifications",
       },
     ],
   },
@@ -42,48 +43,50 @@ const menuItems = [
     title: "OTHER",
     items: [
       {
-        icon: "/profile.png",
+        icon: <FaUser size={20} />, // Icon for Profile
         label: "Profile",
         href: "/profile",
-        visible: ["admin", "teacher", "student", "parent"],
       },
       {
-        icon: "/setting.png",
+        icon: <FaCog size={20} />, // Icon for Settings
         label: "Settings",
         href: "/settings",
-        visible: ["admin", "teacher", "student", "parent"],
       },
       {
-        icon: "/logout.png",
+        icon: <FaSignOutAlt size={20} />, // Icon for Logout
         label: "Logout",
         href: "/logout",
-        visible: ["admin", "teacher", "student", "parent"],
       },
     ],
   },
 ];
 
 const Menu = () => {
+  const pathname = usePathname(); // Get the current path using usePathname
+
   return (
     <div className="mt-4 text-sm px-5 pb-5">
-      {menuItems.map((i) => (
-        <div className="flex flex-col gap-2" key={i.title}>
+      {menuItems.map((section) => (
+        <div className="flex flex-col gap-2" key={section.title}>
+          {/* Section Title */}
           <span className="hidden lg:block text-black font-light my-4">
-            {i.title}
+            {section.title}
           </span>
-          {i.items.map((item) => (
+          {/* Menu Items */}
+          {section.items.map((item) => (
             <Link
               href={item.href}
               key={item.href}
-              className="flex items-center justify-center lg:justify-start gap-4 text-black py-2"
+              className={`flex items-center justify-center lg:justify-start gap-4 py-2 ${
+                pathname === item.href
+                  ? "text-[#ff005c]" // Change text color when active
+                  : "text-black/90"
+              }`}
             >
               <div className="flex items-center gap-2">
-                <Image
-                  src={item.icon}
-                  alt={item.label}
-                  width={20}
-                  height={20}
-                />
+                {/* Icon */}
+                {item.icon}
+                {/* Label */}
                 <span className="hidden lg:block">{item.label}</span>
               </div>
             </Link>

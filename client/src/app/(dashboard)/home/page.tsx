@@ -2,13 +2,34 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { PencilIcon, ArrowRight, FileText } from "lucide-react";
+import {
+  PencilIcon,
+  ArrowRight,
+  FileText,
+  BookOpen,
+  HeartHandshake,
+  UserCog,
+  Users,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import UserCard from "@/components/UserCard";
+import { RiRoadMapLine } from "react-icons/ri";
 
 type Role = "student" | "instructor" | "assistant";
+
+const colors = {
+  blue: "#3b82f6",
+  green: "#10b981",
+  yellow: "#f59e0b",
+  purple: "#ff005c",
+  pink: "#ec4899",
+  indigo: "#6366f1",
+  red: "#ef4444",
+  orange: "#f97316",
+};
 
 interface ProfileData {
   role: Role;
@@ -29,7 +50,7 @@ interface ProfileData {
 }
 
 const profileData: ProfileData = {
-  role: "instructor", // Change this to 'instructor' or 'assistant' to see different profiles
+  role: "assistant", // Change this to 'instructor' or 'assistant' to see different profiles
   name: "Rafiqur Rahman",
   email: "rafiqurrahman51@gmail.com",
   phone: "+09 345 346 46",
@@ -63,11 +84,25 @@ export default function ProfilePage() {
 
   return (
     <div className="container max-w-5xl mx-auto p-4 pb-10 space-y-6">
-      <h1 className="text-xl font-semibold">My Profile</h1>
-
-      <ProfileHeader data={profileData} />
-      <PersonalInformation data={profileData} />
-
+      <div className="w-full ">
+        {/* USER CARD */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <UserCard
+            icon={<RiRoadMapLine />}
+            title="Roadmaps"
+            value="2"
+            subtext="1 completed, 1 in progress"
+            color={colors.blue}
+          />
+          <UserCard
+            icon={<BookOpen />}
+            title="Courses"
+            value="5"
+            subtext="2 completed, 3 in progress"
+            color={colors.purple}
+          />
+        </div>
+      </div>
       {role === "student" && <StudentContent data={profileData} />}
       {role === "instructor" && <InstructorContent data={profileData} />}
       {role === "assistant" && <AssistantContent data={profileData} />}
@@ -341,7 +376,7 @@ function AssistantContent({ data }: { data: ProfileData }) {
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Roadmap Progress</CardTitle>
+          <CardTitle>Courses Progress</CardTitle>
           <Button variant="ghost" size="sm" asChild>
             <Link href="/roadmaps" className="text-blue-600">
               View All
