@@ -29,11 +29,11 @@ interface ProfileData {
 }
 
 const profileData: ProfileData = {
-  role: "instructor", // Change this to 'instructor' or 'assistant' to see different profiles
-  name: "Rafiqur Rahman",
-  email: "rafiqurrahman51@gmail.com",
-  phone: "+09 345 346 46",
-  university: "University of Leeds",
+  role: "student", // Change this to 'instructor' or 'assistant' to see different profiles
+  name: "Mohamed Gamal",
+  email: "mgsay41@gmail.com",
+  phone: "+201225555919",
+  university: "Arab Academy for Science and Technology",
   roadmaps: [
     { name: "Web Development", progress: 65 },
     { name: "Data Science", progress: 30 },
