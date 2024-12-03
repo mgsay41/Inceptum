@@ -17,8 +17,7 @@ const Courses = () => {
       instructor: "Ahmed Khaled",
       duration: "1 month",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/1.png",
       syllabus: [
         "Structuring your presentation effectively",
         "Developing storytelling techniques for better audience engagement",
@@ -37,8 +36,7 @@ const Courses = () => {
       instructor: "Layla Hassan",
       duration: "2 weeks",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/2.png",
       syllabus: [
         "Writing an ATS-optimized CV for better job opportunities",
         "Building an impressive LinkedIn profile",
@@ -57,8 +55,7 @@ const Courses = () => {
       instructor: "Omar Youssef",
       duration: "1 month",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/3.png",
       syllabus: [
         "Understanding leadership styles and finding your own",
         "Strategies for motivating team members",
@@ -77,8 +74,7 @@ const Courses = () => {
       instructor: "Fatima Ali",
       duration: "1 month",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/4.png",
       syllabus: [
         "Basics of verbal and non-verbal communication",
         "Active listening techniques",
@@ -97,8 +93,7 @@ const Courses = () => {
       instructor: "Tamer Nasser",
       duration: "1 month",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/5.png",
       syllabus: [
         "Identifying and analyzing problems effectively",
         "Brainstorming techniques and ideation frameworks",
@@ -117,8 +112,7 @@ const Courses = () => {
       instructor: "Yasmin Kareem",
       duration: "2 weeks",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/6.png",
       syllabus: [
         "Identifying time-wasters and improving productivity",
         "Creating daily and weekly schedules",
@@ -137,8 +131,7 @@ const Courses = () => {
       instructor: "Ibrahim Zaid",
       duration: "1 month",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/7.png",
       syllabus: [
         "Understanding the principles of negotiation",
         "Strategies for finding win-win solutions",
@@ -157,8 +150,7 @@ const Courses = () => {
       instructor: "Hana Tariq",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/8.png",
       syllabus: [
         "Introduction to cybersecurity and its importance",
         "Network security basics and tools like Wireshark",
@@ -178,8 +170,7 @@ const Courses = () => {
       instructor: "Amina Faris",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/9.png",
       syllabus: [
         "Basics of Python, libraries like Pandas, NumPy",
         "Data visualization with Matplotlib and Seaborn",
@@ -197,8 +188,7 @@ const Courses = () => {
       instructor: "Nasser Adel",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/10.png",
       syllabus: [
         "Basics of HTML, CSS, and JavaScript",
         "React.js fundamentals and building dynamic UIs",
@@ -216,8 +206,7 @@ const Courses = () => {
       instructor: "Rami Wael",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/11.png",
       syllabus: [
         "Basics of AI and ML with Python",
         "Supervised and unsupervised learning algorithms",
@@ -235,8 +224,7 @@ const Courses = () => {
       instructor: "Huda Sami",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/12.png",
       syllabus: [
         "Introduction to IoT and microcontrollers",
         "Programming Arduino and sensor interfacing",
@@ -254,8 +242,7 @@ const Courses = () => {
       instructor: "Khaled Majed",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/13.png",
       syllabus: [
         "Flutter and Dart basics",
         "Designing responsive UIs",
@@ -273,8 +260,7 @@ const Courses = () => {
       instructor: "Mariam Tamer",
       duration: "1 month",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/14.png",
       syllabus: [
         "Introduction to software testing and QA principles",
         "Writing test cases and performing manual testing",
@@ -292,8 +278,7 @@ const Courses = () => {
       instructor: "Ahmed Bassel",
       duration: "1.5 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/15.png",
       syllabus: [
         "Introduction to digital marketing and SEO basics",
         "Social media marketing and Google Ads campaign creation",
@@ -310,8 +295,7 @@ const Courses = () => {
       instructor: "Salma Saeed",
       duration: "1 month",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/16.png",
       syllabus: [
         "Fundamentals of sales strategy and pipeline management",
         "Sales negotiation techniques and client relationship building",
@@ -329,8 +313,7 @@ const Courses = () => {
       instructor: "Anas Hadi",
       duration: "1.5 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/17.png",
       syllabus: [
         "Basics of content marketing and storytelling",
         "Writing optimized SEO content and advertising copy",
@@ -347,8 +330,7 @@ const Courses = () => {
       instructor: "Rania Omar",
       duration: "1.5 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/18.png",
       syllabus: [
         "Understanding different social media platforms and algorithms",
         "Influencer outreach and collaboration strategies",
@@ -365,8 +347,7 @@ const Courses = () => {
       instructor: "Zainab Faisal",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/19.png",
       syllabus: [
         "Introduction to business development and market research",
         "Understanding customer needs and value propositions",
@@ -385,8 +366,7 @@ const Courses = () => {
       instructor: "Sara Amr",
       duration: "1 month",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/20.png",
       syllabus: [
         "Introduction to accounting principles and terminologies",
         "Understanding the balance sheet and income statement",
@@ -405,8 +385,7 @@ const Courses = () => {
       instructor: "Reem Ibrahim",
       duration: "1 month",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/21.png",
       syllabus: [
         "Basics of professional communication",
         "Effective email and report writing",
@@ -425,8 +404,7 @@ const Courses = () => {
       instructor: "Youssef Adel",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/22.png",
       syllabus: [
         "Introduction to digital marketing and SEO",
         "Social media marketing and content creation",
@@ -445,8 +423,7 @@ const Courses = () => {
       instructor: "Noor Khaled",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/23.png",
       syllabus: [
         "Introduction to entrepreneurship and startup ecosystems",
         "Developing a business model and value proposition",
@@ -465,8 +442,7 @@ const Courses = () => {
       instructor: "Hadi Layla",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/24.png",
       syllabus: [
         "Introduction to graphic design and design principles",
         "Typography basics and font selection",
@@ -485,8 +461,7 @@ const Courses = () => {
       instructor: "Amal Anas",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/25.png",
       syllabus: [
         "Introduction to motion graphics and animation",
         "Working with Adobe After Effects",
@@ -505,8 +480,7 @@ const Courses = () => {
       instructor: "Malak Hassan",
       duration: "1 month",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/26.png",
       syllabus: [
         "Understanding camera settings: ISO, aperture, and shutter speed",
         "Composition and framing techniques",
@@ -525,8 +499,7 @@ const Courses = () => {
       instructor: "Wael Tamer",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/27.png",
       syllabus: [
         "Introduction to videography and equipment",
         "Storyboarding and planning a shoot",
@@ -545,8 +518,7 @@ const Courses = () => {
       instructor: "Aisha Nasser",
       duration: "1 month",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/28.png",
       syllabus: [
         "Understanding social media platforms and audiences",
         "Creating visually appealing posts and videos",
@@ -565,8 +537,7 @@ const Courses = () => {
       instructor: "Jafar Ali",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/29.png",
       syllabus: [
         "Introduction to entrepreneurship and startup culture",
         "Market research and idea validation",
@@ -585,8 +556,7 @@ const Courses = () => {
       instructor: "Lina Zaid",
       duration: "1 month",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/30.png",
       syllabus: [
         "Understanding business model frameworks",
         "Customer segmentation and value proposition design",
@@ -605,8 +575,7 @@ const Courses = () => {
       instructor: "Iman Kareem",
       duration: "1 month",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/31.png",
       syllabus: [
         "Defining leadership in the entrepreneurial context",
         "Building and motivating a team",
@@ -625,8 +594,7 @@ const Courses = () => {
       instructor: "Bassel Tariq",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/32.png",
       syllabus: [
         "Understanding startup finances and accounting basics",
         "Budgeting and forecasting",
@@ -645,8 +613,7 @@ const Courses = () => {
       instructor: "Hana Sami",
       duration: "1 month",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/33.png",
       syllabus: [
         "Basics of marketing and branding",
         "Creating a marketing plan",
@@ -665,8 +632,7 @@ const Courses = () => {
       instructor: "Samira Ahmed",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/34.png",
       syllabus: [
         "Basics of Python and data libraries (Pandas, NumPy)",
         "Data visualization techniques",
@@ -684,8 +650,7 @@ const Courses = () => {
       instructor: "Joud Omar",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/35.png",
       syllabus: [
         "Introduction to cloud computing and AWS",
         "Managing AWS services (EC2, S3, RDS)",
@@ -703,8 +668,7 @@ const Courses = () => {
       instructor: "Faris Khaled",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/36.png",
       syllabus: [
         "Blockchain fundamentals and Ethereum basics",
         "Writing smart contracts with Solidity",
@@ -722,8 +686,7 @@ const Courses = () => {
       instructor: "Khadija Adel",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/37.png",
       syllabus: [
         "Robotics fundamentals and mechanical design",
         "Programming robots using Arduino",
@@ -741,8 +704,7 @@ const Courses = () => {
       instructor: "Tamer Mariam",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/38.png",
       syllabus: [
         "Introduction to DevOps and CI/CD basics",
         "Working with Docker and containers",
@@ -760,8 +722,7 @@ const Courses = () => {
       instructor: "Suha Anas",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/39.png",
       syllabus: [
         "Advanced penetration testing methods",
         "Network and application security analysis",
@@ -779,8 +740,7 @@ const Courses = () => {
       instructor: "Leen Nasser",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/40.png",
       syllabus: [
         "Basics of AI and ML with Python",
         "Supervised and unsupervised learning algorithms",
@@ -797,8 +757,7 @@ const Courses = () => {
       instructor: "Bushra Hadi",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/41.png",
       syllabus: [
         "Flutter and Dart basics",
         "Designing responsive UIs",
@@ -816,8 +775,7 @@ const Courses = () => {
       instructor: "Amina Wael",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/42.png",
       syllabus: [
         "Introduction to IoT and microcontrollers",
         "Programming Arduino and sensor interfacing",
@@ -835,8 +793,7 @@ const Courses = () => {
       instructor: "Reem Bassel",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/43.png",
       syllabus: [
         "Basics of HTML, CSS, and JavaScript",
         "React.js fundamentals and building dynamic UIs",
@@ -854,8 +811,7 @@ const Courses = () => {
       instructor: "Ali Salem",
       duration: "1.5 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/44.png",
       syllabus: [
         "Introduction to Tableau and its interface",
         "Creating interactive dashboards",
@@ -873,8 +829,7 @@ const Courses = () => {
       instructor: "Yasmin Huda",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/45.png",
       syllabus: [
         "Introduction to cybersecurity and its importance",
         "Network security basics and tools like Wireshark",
@@ -892,8 +847,7 @@ const Courses = () => {
       instructor: "Zaid Tamer",
       duration: "1 month",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/46.png",
       syllabus: [
         "Fundamentals of software testing and QA principles",
         "Writing test cases and performing manual testing",
@@ -911,8 +865,7 @@ const Courses = () => {
       instructor: "Kareem Rami",
       duration: "1.5 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/47.png",
       syllabus: [
         "Introduction to digital marketing and SEO basics",
         "Social media marketing and Google Ads campaign creation",
@@ -929,8 +882,7 @@ const Courses = () => {
       instructor: "Noor Ahmed",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/48.png",
       syllabus: [
         "Basics of UI/UX design and user psychology",
         "Wireframing and prototyping using Figma",
@@ -948,8 +900,7 @@ const Courses = () => {
       instructor: "Omar Hana",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/49.png",
       syllabus: [
         "Introduction to big data and Hadoop ecosystem",
         "Processing data with Apache Spark",
@@ -966,8 +917,7 @@ const Courses = () => {
       instructor: "Salma Faris",
       duration: "2 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/50.png",
       syllabus: [
         "Basics of AR and VR technologies",
         "Designing AR experiences with Unity",
@@ -984,8 +934,7 @@ const Courses = () => {
       instructor: "Sara Iman",
       duration: "1.5 months",
       students: 0,
-      image:
-        "https://cdn.elearningindustry.com/wp-content/uploads/2020/02/what-to-check-before-an-online-course-purchase.png",
+      image: "/courseImage/51.png",
       syllabus: [
         "Basics of computer networks and protocols",
         "Configuring routers and switches",
