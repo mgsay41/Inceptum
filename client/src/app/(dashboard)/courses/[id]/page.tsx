@@ -1055,7 +1055,9 @@ const CourseDetails = () => {
               <div className="text-3xl font-bold text-primary mb-6">
                 {course.price}
               </div>
-              <Button className="w-full mb-4 bg-[#FF005C]">Enroll Now</Button>
+              <Button className="w-full mb-4 bg-[#FF005C] hover:bg-[#FF005C]/60">
+                Enroll Now
+              </Button>
               <p className="text-sm text-gray-500 text-center">
                 14-day money-back guarantee
               </p>
