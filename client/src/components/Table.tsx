@@ -15,9 +15,16 @@ const Table = ({
   return (
     <table className="w-full mt-4">
       <thead>
-        <tr className="text-left text-xs font-semibold text-gray-500">
+        <tr className="text-center text-xs font-semibold text-gray-500">
           {columns.map((column) => (
-            <th key={column.accessor}>{column.header}</th>
+            <th
+              key={column.accessor}
+              className={
+                column.accessor === "info" ? "text-left pl-4" : "text-center"
+              }
+            >
+              {column.header}
+            </th>
           ))}
         </tr>
       </thead>

@@ -6,8 +6,6 @@ import React, { useState } from "react";
 
 // Courses Page Component
 const Courses = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-
   const courses = [
     {
       id: "1",
@@ -945,7 +943,7 @@ const Courses = () => {
       price: "2500 EGP",
     },
   ];
-
+  const [searchTerm, setSearchTerm] = useState("");
   // Filter courses based on search term
   const filteredCourses = courses.filter(
     (course) =>

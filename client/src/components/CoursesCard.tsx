@@ -1,4 +1,5 @@
 import { Clock, BookOpen } from "lucide-react";
+import Image from "next/image";
 
 interface CourseCardProps {
   id?: string; // Optional id
@@ -21,7 +22,13 @@ const CourseCard = ({
 }: CourseCardProps) => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-200 hover:scale-105">
-      <img className="h-48 w-full object-cover" src={image} alt={title} />
+      <Image
+        className="h-48 w-full object-cover"
+        src={image}
+        alt={title}
+        width={300}
+        height={300}
+      />
       <div className="p-6">
         <h3 className="text-xl font-semibold text-gray-900 mb-2">{title}</h3>
         <p className="text-gray-600 text-sm mb-4">{description}</p>

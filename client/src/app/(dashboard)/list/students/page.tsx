@@ -9,15 +9,11 @@ import { Eye, Trash2, FileUser } from "lucide-react";
 import { FaPlus, FaSortAmountDown } from "react-icons/fa";
 import { RiFilter2Line } from "react-icons/ri";
 import FormModal from "@/components/FormModal";
+import prisma from "@/lib/prisma";
+import { Course, User } from "@prisma/client";
 
-type Student = {
-  id: number;
-  studentID: string;
-  name: string;
-  photo: string;
-  phone: string;
-  email: string;
-  grade: number;
+type StudentsList = User & {
+  enrolledCourses: Course[];
 };
 
 const columns = [
@@ -26,20 +22,16 @@ const columns = [
     accessor: "info",
   },
   {
-    header: "Student ID",
-    accessor: "studentID",
+    header: "Inceptum ID",
+    accessor: "inceptumID",
   },
   {
-    header: "Phone",
-    accessor: "phone",
+    header: "Is Assistant?",
+    accessor: "assistant",
   },
   {
-    header: "Email",
-    accessor: "email",
-  },
-  {
-    header: "Grade",
-    accessor: "grade",
+    header: "Courses",
+    accessor: "courses",
   },
   {
     header: "Action",
@@ -47,44 +39,74 @@ const columns = [
   },
 ];
 
-const StudentListPage = () => {
-  const renderRow = (items: Student) => {
-    return (
-      <tr
-        key={items.id}
-        className="text-left text-xs text-gray-500 font-semibold border-b border-gray-200 even:bg-slate-50 hover:bg-slate-100 "
-      >
-        <td className="flex items-center gap-2 p-4">
-          <Image
-            src={items.photo}
-            alt="user"
-            width={40}
-            height={40}
-            className="md:hidden xl:block w-10 h-10 rounded-full object-cover"
-          />
-          <div className="flex flex-col">
-            <h3 className="font-semibold">{items.name}</h3>
-            <h4 className="text-xs text-gray-500">{items?.email}</h4>
-          </div>
-        </td>
-        <td className="hidden md:table-cell">{items.studentID}</td>
-        <td className="hidden md:table-cell">{items.phone}</td> {/*cv*/}
-        <td className="hidden md:table-cell">{items.email}</td> {/*cv*/}
-        <td className="hidden md:table-cell">{items.grade}</td>
-        <td>
-          <div className="flex items-center gap-2">
-            <Link href={`/list/students/${items.id}`}>
-              <FormModal table="assistants" type="view" />
-            </Link>
-            {role === "admin" && (
-              <FormModal table="assistants" type="delete" id={items.id} />
-            )}
-            <FormModal table="assistants" type="CV" />
-          </div>
-        </td>
-      </tr>
-    );
-  };
+const renderRow = (items: StudentsList) => {
+  return (
+    <tr
+      key={items.id}
+      className="text-left text-xs text-gray-500 font-semibold border-b border-gray-200 even:bg-slate-50 hover:bg-slate-100 "
+    >
+      <td className="flex items-center gap-2 p-4">
+        <Image
+          src={items.profilePhoto || "/avatar.png"}
+          alt="user"
+          width={40}
+          height={40}
+          className="md:hidden xl:block w-10 h-10 rounded-full object-cover"
+        />
+        <div className="flex flex-col">
+          <h3 className="font-semibold">
+            {items.firstName} {items.lastName}
+          </h3>
+          <h4 className="text-xs text-gray-500">{items?.email}</h4>
+        </div>
+      </td>
+      <td className="hidden md:table-cell text-center">{items.inceptumId}</td>
+      <td className="hidden md:table-cell text-center">
+        {items.isAssistant === true ? "Assistant" : "Not Assistant"}
+      </td>{" "}
+      {/*cv*/}
+      <td className="hidden md:table-cell text-center">
+        {items.enrolledCourses.length > 2
+          ? items.enrolledCourses
+              .slice(0, 2)
+              .map((course) => course.title)
+              .join(", ") + ",..."
+          : items.enrolledCourses.map((course) => course.title).join(", ")}
+      </td>
+      <td className="flex items-center justify-center">
+        <div className="flex items-center gap-2">
+          <Link href={`/list/students/${items.id}`}>
+            <FormModal table="assistants" type="view" />
+          </Link>
+          {role === "admin" && (
+            <FormModal table="assistants" type="delete" id={items.id} />
+          )}
+          <FormModal table="assistants" type="CV" />
+        </div>
+      </td>
+    </tr>
+  );
+};
+
+const StudentListPage = async ({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | undefined };
+}) => {
+  const { page, ...queryParams } = searchParams;
+
+  const p = page ? parseInt(page) : 1;
+
+  const [StudentsData, count] = await prisma.$transaction([
+    prisma.user.findMany({
+      include: {
+        enrolledCourses: true,
+      },
+      take: 10,
+      skip: (p - 1) * 10,
+    }),
+    prisma.instructor.count(),
+  ]);
 
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
@@ -104,11 +126,11 @@ const StudentListPage = () => {
       {/* LIST SECTION */}
 
       <div className="">
-        <Table columns={columns} renderRow={renderRow} data={studentsData} />
+        <Table columns={columns} renderRow={renderRow} data={StudentsData} />
       </div>
 
       {/* PAGINATION SECTION */}
-      <Pagination />
+      <Pagination page={p} count={count} />
     </div>
   );
 };

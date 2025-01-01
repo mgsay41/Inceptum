@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Clock, Users, BookOpen } from "lucide-react";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 interface Course {
   id: string;
@@ -1001,7 +1002,7 @@ const CourseDetails = () => {
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2">
-            <img
+            <Image
               src={course.image}
               alt={course.title}
               className="w-full h-[400px] object-cover rounded-lg shadow-lg mb-8"

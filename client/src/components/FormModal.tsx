@@ -32,7 +32,7 @@ interface FormModalProps {
   table: TableType;
   type: ActionType;
   data?: any;
-  id?: number;
+  id?: string;
 }
 
 const FormModal: React.FC<FormModalProps> = ({ table, type, data, id }) => {
