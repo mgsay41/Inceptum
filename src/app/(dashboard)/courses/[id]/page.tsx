@@ -314,7 +314,7 @@ const CourseDetailsPage: React.FC = () => {
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
             <h3 className="text-lg font-bold mb-4">Book Course</h3>
             <p className="text-gray-600 mb-4">
-              Are you sure you want to book "{course.Title}"?
+              Are you sure you want to book &quot;{course.Title}&quot;?
             </p>
             <div className="flex gap-3">
               <button
