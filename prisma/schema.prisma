@@ -1,0 +1,249 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id              String      @id @default(cuid())
+  adminId         Int         @unique @default(autoincrement())
+  firstName       String
+  lastName        String
+  email           String      @unique
+  password        String
+  phoneNumber     String      @unique
+  profilePicture  String?
+  createdCourses  Course[]    @relation("CreatedCourses")
+  createdRoadmaps Roadmap[]   @relation("CreatedRoadmaps")
+  handledRequests Assistant[]
+  approvedCourseProviders CourseProvider[] @relation("ApprovedCourseProviders")
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([email, phoneNumber])
+}
+
+model User {
+  id                    String        @id @default(cuid())
+  inceptumId           Int           @unique @default(autoincrement())
+  firstName            String
+  lastName             String
+  phoneNumber          String        @unique
+  profilePhoto         String?
+  email                String        @unique
+  password             String
+  age                  Int
+  bio                  String?       @db.Text
+  education            Education[]
+  enrolledCourses      Course[]      @relation("UserCourses")
+  roadmaps             Roadmap[]     @relation("EnrolledRoadMaps")
+  certificates         Certificate[]
+  assistantApplications Assistant[]   @relation("UserAssistants")
+  isAssistant          Boolean       @default(false)
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  @@index([email, phoneNumber])
+}
+
+model CourseProvider {
+  id                 String               @id @default(cuid())
+  providerId         Int                  @unique @default(autoincrement())
+  companyName        String
+  companyDescription String?              @db.Text
+  website            String?
+  email              String               @unique
+  password           String
+  phoneNumber        String               @unique
+  address            String?
+  city               String?
+  country            String?
+  logo               String?
+  coverImage         String?
+  established        DateTime?
+  socialMediaLinks   Json?                // Store social media links as JSON
+  businessLicense    String?              // Business license/registration number
+  taxId              String?              // Tax identification number
+  rating             Float?               @default(0.0)
+  totalStudents      Int                  @default(0)
+  totalCourses       Int                  @default(0)
+  verified           Boolean              @default(false)
+  status             CourseProviderStatus @default(PENDING)
+  approvedBy         Admin?               @relation("ApprovedCourseProviders", fields: [adminId], references: [id])
+  adminId            String?
+  instructors        Instructor[]         @relation("ProviderInstructors")
+  courses            Course[]             @relation("ProviderCourses")
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+
+  @@index([email, phoneNumber, companyName])
+}
+
+model Education {
+  id               Int      @id @default(autoincrement())
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           String
+  university       String
+  college          String
+  department       String
+  yearOfGraduation Int
+  degree           String
+  universityId     String
+  photo            String?
+
+  @@index([userId])
+}
+
+model Certificate {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  name      String
+  file      String
+  issueDate DateTime
+  institute String
+
+  @@index([userId])
+}
+
+model Course {
+  id                    Int             @id @default(autoincrement())
+  title                 String
+  description          String?         @db.Text
+  instructor           Instructor?     @relation("InstructorCourses", fields: [instructorId], references: [id])
+  instructorId         String?
+  courseProvider       CourseProvider? @relation("ProviderCourses", fields: [courseProviderId], references: [id])
+  courseProviderId     String?
+  roadmap              Roadmap         @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  roadmapId            Int
+  createdBy            Admin           @relation("CreatedCourses", fields: [adminId], references: [id])
+  adminId              String
+  status               CourseStatus    @default(PENDING)
+  enrolledStudents     User[]          @relation("UserCourses")
+  createdAt            DateTime        @default(now())
+  assistantApplications Assistant[]     @relation("CourseAssistants")
+  updatedAt            DateTime        @updatedAt
+
+  @@index([instructorId, roadmapId, adminId, courseProviderId])
+}
+
+model Assistant {
+  id         Int             @id @default(autoincrement())
+  student    User            @relation("UserAssistants", fields: [studentId], references: [id])
+  studentId  String
+  course     Course          @relation("CourseAssistants", fields: [courseId], references: [id])
+  courseId   Int
+  status     AssistantStatus @default(PENDING)
+  reviewedBy Admin?          @relation(fields: [adminId], references: [id])
+  adminId    String?
+  rating     Float?          @default(0.0)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  @@index([studentId, courseId, adminId])
+}
+
+model Roadmap {
+  id          Int           @id @default(autoincrement())
+  title       String
+  description String?       @db.Text
+  createdBy   Admin         @relation("CreatedRoadmaps", fields: [adminId], references: [id])
+  adminId     String
+  instructors Instructor[]  @relation("InstructorRoadMaps")
+  courses     Course[]
+  students    User[]        @relation("EnrolledRoadMaps")
+  status      RoadmapStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([adminId])
+}
+
+model Instructor {
+  id              String          @id @default(cuid())
+  instructorId    Int             @unique @default(autoincrement())
+  profilePicture  String?
+  firstName       String
+  lastName        String
+  phoneNumber     String          @unique
+  instructorClass InstructorClass
+  email           String          @unique
+  password        String
+  age             Int
+  rating          Float?          @default(0.0)
+  cv              String?
+  bio             String?         @db.Text
+  specialization  String?         // Area of expertise
+  experience      Int?            // Years of experience
+  courseProvider  CourseProvider? @relation("ProviderInstructors", fields: [courseProviderId], references: [id])
+  courseProviderId String?
+  courses         Course[]        @relation("InstructorCourses")
+  roadMaps        Roadmap[]       @relation("InstructorRoadMaps")
+  courseRequests  CourseRequest[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([email, phoneNumber, courseProviderId])
+}
+
+model CourseRequest {
+  id               Int           @id @default(autoincrement())
+  title            String
+  description      String?       @db.Text
+  roadmapName      String?
+  duration         Int
+  courseOutline    String?       @db.Text
+  location         String?
+  startDate        DateTime
+  courseImage      String?
+  numberOfSessions Int
+  sessionDuration  Int
+  instructor       Instructor    @relation(fields: [instructorId], references: [id])
+  instructorId     String
+  status           RequestStatus @default(PENDING)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@index([instructorId])
+}
+
+enum InstructorClass {
+  A
+  B
+  C
+}
+
+enum RequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum CourseStatus {
+  PENDING
+  APPROVED
+  PUBLISHED
+  REJECTED
+}
+
+enum RoadmapStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum AssistantStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum CourseProviderStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
