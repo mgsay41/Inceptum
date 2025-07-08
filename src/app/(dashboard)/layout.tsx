@@ -5,6 +5,7 @@ import Menu from "@/components/Menu";
 import Image from "next/image";
 import Link from "next/link";
 import BottomNav from "@/components/BottomNav"; // Import the bottom nav
+import { usePathname } from "next/navigation"; // Add this import
 
 export default function DashboardLayout({
   children,
@@ -12,6 +13,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   const [isMobile, setIsMobile] = useState(false);
+  const pathname = usePathname(); // Get current path
 
   // Detect screen size changes (mobile vs desktop)
   useEffect(() => {
@@ -54,19 +56,19 @@ export default function DashboardLayout({
       </div>
       {/* MAIN CONTENT */}
       <div className="bg-[#F7F8FA] w-full flex flex-col">
-        {/* Mobile Logo - Only show on mobile */}
-        {isMobile && (
-          <div className="flex p-4 bg-white shadow-md">
+        {/* Mobile Logo - Only show on mobile and NOT on /profile */}
+        {/* {isMobile && pathname !== "/profile" && (
+          <div className="flex p-4">
             <Link href="/">
               <Image
-                src="/tariky-logo.png" // Use your logo path
+                src="/tariky-logo.png"
                 alt="tariky-logo"
-                width={150} // Adjust the width
-                height={60} // Adjust the height
+                width={70}
+                height={70}
               />
             </Link>
           </div>
-        )}
+        )} */}
 
         {/* Scrollable children */}
         <div className="flex-1 overflow-y-auto scrollbar-hide pt-1">

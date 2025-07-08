@@ -14,7 +14,7 @@ const BottomNav = () => {
         <Link
           href="/home"
           className={`flex flex-col items-center ${
-            pathname === "/home" ? "text-[#ff005c]" : "text-gray-600"
+            pathname === "/home" ? "text-primary" : "text-gray-600"
           }`}
         >
           <FaHome size={24} />
@@ -25,7 +25,7 @@ const BottomNav = () => {
         <Link
           href="/courses"
           className={`flex flex-col items-center ${
-            pathname === "/courses" ? "text-[#ff005c]" : "text-gray-600"
+            pathname === "/courses" ? "text-primary" : "text-gray-600"
           }`}
         >
           <FaBook size={24} />
@@ -36,7 +36,7 @@ const BottomNav = () => {
         <Link
           href="/profile"
           className={`flex flex-col items-center ${
-            pathname === "/profile" ? "text-[#ff005c]" : "text-gray-600"
+            pathname === "/profile" ? "text-primary" : "text-gray-600"
           }`}
         >
           <FaUser size={24} />
