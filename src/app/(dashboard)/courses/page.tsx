@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import {
   Star,
@@ -82,7 +83,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
           <div className="relative flex-shrink-0">
             <div className="w-full sm:w-48 h-32 sm:h-28 bg-gray-200 flex items-center justify-center rounded-lg">
               {item.courseImage ? (
-                <img
+                <Image
                   src={item.courseImage}
                   alt={item.title}
                   className="object-cover w-full h-full rounded-lg"
@@ -144,7 +145,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
       <div className="relative mb-3">
         <div className="w-full h-40 sm:h-48 bg-gray-200 flex items-center justify-center rounded-lg">
           {item.courseImage ? (
-            <img
+            <Image
               src={item.courseImage}
               alt={item.title}
               className="object-cover w-full h-full rounded-lg"

@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useClerk, useUser } from "@clerk/nextjs";
 import {
   IoLogOutOutline,
@@ -69,7 +70,7 @@ export default function Profile() {
             <div className="flex flex-col items-center mb-8 lg:mb-0">
               <div className="relative">
                 <button className="relative group">
-                  <img
+                  <Image
                     src={
                       isLoaded && user?.imageUrl
                         ? user.imageUrl

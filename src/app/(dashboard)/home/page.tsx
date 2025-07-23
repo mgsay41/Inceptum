@@ -58,7 +58,7 @@ const FeaturedCard: React.FC<FeaturedCardProps> = ({ item, onPress }) => (
     {/* Show course image if available */}
     <div className="w-full h-full bg-gray-200 flex items-center justify-center">
       {item.courseImage ? (
-        <img
+        <Image
           src={item.courseImage}
           alt={item.title}
           className="object-cover w-full h-full"
@@ -109,7 +109,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
       {/* Show course image if available */}
       <div className="w-full h-40 sm:h-48 bg-gray-200 flex items-center justify-center rounded-lg">
         {item.courseImage ? (
-          <img
+          <Image
             src={item.courseImage}
             alt={item.title}
             className="object-cover w-full h-full rounded-lg"
@@ -244,7 +244,7 @@ const CoursesApp: React.FC = () => {
           <p className="hidden md:block"></p>
           {isLoaded && (
             <div className="flex items-center ">
-              <img
+              <Image
                 src={
                   user?.imageUrl
                     ? user.imageUrl
