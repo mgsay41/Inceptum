@@ -9,11 +9,9 @@ export async function GET(
 ) {
   const { slug } = params;
   const course = await prisma.course.findUnique({
-    where: { slug },
+    where: { slug }, // This now works because slug is unique
     include: {
-      courseProvider: {
-        select: { companyName: true, logo: true },
-      },
+      courseProvider: { select: { companyName: true, logo: true } },
       instructor: {
         select: { firstName: true, lastName: true, profilePicture: true },
       },
