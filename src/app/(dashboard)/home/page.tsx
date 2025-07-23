@@ -264,37 +264,39 @@ const CoursesApp: React.FC = () => {
         </div>
 
         {/* Featured Section */}
-        <div className="my-6 sm:my-8 bg-white rounded-lg p-4 sm:p-6 shadow-sm">
-          <div className="flex items-center justify-between mb-4 sm:mb-6">
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800">
-              Featured
-            </h2>
+        {courses.length >= 3 && (
+          <div className="my-6 sm:my-8 bg-white rounded-lg p-4 sm:p-6 shadow-sm">
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
+              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800">
+                Featured
+              </h2>
+            </div>
+            {loading ? (
+              <div className="flex justify-center py-8">
+                <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-teal-500"></div>
+              </div>
+            ) : (
+              <div className="flex gap-3 sm:gap-4 lg:gap-5 overflow-x-auto pb-2 scrollbar-hide">
+                <style jsx>{`
+                  .scrollbar-hide {
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                  }
+                  .scrollbar-hide::-webkit-scrollbar {
+                    display: none;
+                  }
+                `}</style>
+                {featuredCourses.map((item) => (
+                  <FeaturedCard
+                    key={`featured_${item.id}`}
+                    item={item}
+                    onPress={() => handleCardPress(item.slug)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-          {loading ? (
-            <div className="flex justify-center py-8">
-              <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-teal-500"></div>
-            </div>
-          ) : (
-            <div className="flex gap-3 sm:gap-4 lg:gap-5 overflow-x-auto pb-2 scrollbar-hide">
-              <style jsx>{`
-                .scrollbar-hide {
-                  -ms-overflow-style: none;
-                  scrollbar-width: none;
-                }
-                .scrollbar-hide::-webkit-scrollbar {
-                  display: none;
-                }
-              `}</style>
-              {featuredCourses.map((item) => (
-                <FeaturedCard
-                  key={`featured_${item.id}`}
-                  item={item}
-                  onPress={() => handleCardPress(item.slug)}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+        )}
 
         {/* Courses Section */}
         <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm">
