@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Star,
   Heart,
@@ -9,9 +9,9 @@ import {
   Search,
   ChevronDown,
 } from "lucide-react";
-import { useRouter } from "next/navigation"; // Add this import
+import { useRouter } from "next/navigation";
 
-// Dummy data
+// Categories
 const categories = [
   { category: "All", title: "All" },
   { category: "programming", title: "Programming" },
@@ -32,167 +32,34 @@ const sortOptions = [
   { value: "popular", label: "Most Popular" },
 ];
 
-const dummyCourses = [
-  {
-    id: "1",
-    Title: "Complete React Native Development Course",
-    Image:
-      "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400&h=300&fit=crop",
-    Rating: 4.8,
-    Fees: 1200,
-    provider: { Name: "Tech Academy" },
-    category: "programming",
-    students: 12500,
-    duration: "40 hours",
-    level: "Intermediate",
-  },
-  {
-    id: "2",
-    Title: "UI/UX Design Masterclass - Complete Guide",
-    Image:
-      "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400&h=300&fit=crop",
-    Rating: 4.9,
-    Fees: 950,
-    provider: { Name: "Design Studio" },
-    category: "design",
-    students: 8900,
-    duration: "35 hours",
-    level: "Beginner",
-  },
-  {
-    id: "3",
-    Title: "Digital Marketing Strategy & Analytics",
-    Image:
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop",
-    Rating: 4.7,
-    Fees: 800,
-    provider: { Name: "Marketing Pro" },
-    category: "marketing",
-    students: 15600,
-    duration: "25 hours",
-    level: "Intermediate",
-  },
-  {
-    id: "4",
-    Title: "Professional Photography Fundamentals",
-    Image:
-      "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=400&h=300&fit=crop",
-    Rating: 4.6,
-    Fees: 600,
-    provider: { Name: "Photo School" },
-    category: "photography",
-    students: 6700,
-    duration: "20 hours",
-    level: "Beginner",
-  },
-  {
-    id: "5",
-    Title: "Business Analytics & Data Visualization",
-    Image:
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop",
-    Rating: 4.8,
-    Fees: 1100,
-    provider: { Name: "Business Hub" },
-    category: "business",
-    students: 9800,
-    duration: "30 hours",
-    level: "Advanced",
-  },
-  {
-    id: "6",
-    Title: "Full Stack Web Development Bootcamp",
-    Image:
-      "https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=400&h=300&fit=crop",
-    Rating: 4.9,
-    Fees: 1500,
-    provider: { Name: "Code Academy" },
-    category: "programming",
-    students: 18900,
-    duration: "60 hours",
-    level: "Intermediate",
-  },
-  {
-    id: "7",
-    Title: "Data Science with Python & Machine Learning",
-    Image:
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop",
-    Rating: 4.7,
-    Fees: 1350,
-    provider: { Name: "Data Institute" },
-    category: "data-science",
-    students: 7500,
-    duration: "50 hours",
-    level: "Advanced",
-  },
-  {
-    id: "8",
-    Title: "iOS App Development with Swift",
-    Image:
-      "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&h=300&fit=crop",
-    Rating: 4.6,
-    Fees: 1250,
-    provider: { Name: "Mobile Masters" },
-    category: "mobile-dev",
-    students: 5600,
-    duration: "45 hours",
-    level: "Intermediate",
-  },
-  {
-    id: "9",
-    Title: "Advanced Graphic Design & Branding",
-    Image:
-      "https://images.unsplash.com/photo-1558655146-d09347e92766?w=400&h=300&fit=crop",
-    Rating: 4.8,
-    Fees: 900,
-    provider: { Name: "Creative Studio" },
-    category: "design",
-    students: 11200,
-    duration: "28 hours",
-    level: "Advanced",
-  },
-  {
-    id: "10",
-    Title: "Social Media Marketing Mastery",
-    Image:
-      "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=300&fit=crop",
-    Rating: 4.5,
-    Fees: 650,
-    provider: { Name: "Social Media Pro" },
-    category: "marketing",
-    students: 13400,
-    duration: "18 hours",
-    level: "Beginner",
-  },
-  {
-    id: "11",
-    Title: "Entrepreneurship & Business Strategy",
-    Image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop",
-    Rating: 4.7,
-    Fees: 1050,
-    provider: { Name: "Business Leaders" },
-    category: "business",
-    students: 8700,
-    duration: "32 hours",
-    level: "Intermediate",
-  },
-  {
-    id: "12",
-    Title: "Wedding Photography Workshop",
-    Image:
-      "https://images.unsplash.com/photo-1465495976277-4387d4b0e4a6?w=400&h=300&fit=crop",
-    Rating: 4.9,
-    Fees: 750,
-    provider: { Name: "Wedding Pros" },
-    category: "photography",
-    students: 4300,
-    duration: "15 hours",
-    level: "Intermediate",
-  },
-];
-
-// Types
-type Course = (typeof dummyCourses)[number];
+// Types - Updated to match database structure
+type Course = {
+  id: number;
+  title: string;
+  slug: string;
+  description?: string;
+  shortDescription?: string;
+  courseImage?: string;
+  courseFee: string; // Prisma Decimal comes as string
+  rating?: number;
+  totalRatings?: number;
+  level: string;
+  duration: number;
+  courseType: string;
+  language: string;
+  courseProvider?: {
+    companyName: string;
+    logo?: string;
+  };
+  instructor?: {
+    firstName: string;
+    lastName: string;
+    profilePicture?: string;
+  };
+  createdAt: string;
+  // Add category field for filtering (you might need to add this to your database)
+  category?: string;
+};
 
 type CourseCardProps = {
   item: Course;
@@ -213,15 +80,23 @@ const CourseCard: React.FC<CourseCardProps> = ({
       >
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-shrink-0">
-            <img
-              src={item.Image}
-              alt={item.Title}
-              className="w-full sm:w-48 h-32 sm:h-28 object-cover rounded-lg"
-            />
+            <div className="w-full sm:w-48 h-32 sm:h-28 bg-gray-200 flex items-center justify-center rounded-lg">
+              {item.courseImage ? (
+                <img
+                  src={item.courseImage}
+                  alt={item.title}
+                  className="object-cover w-full h-full rounded-lg"
+                />
+              ) : (
+                <span className="text-sm font-bold text-gray-400">
+                  {item.title}
+                </span>
+              )}
+            </div>
             <div className="absolute top-2 right-2 bg-white/90 px-2 py-1 rounded-full flex items-center gap-1">
               <Star className="w-3 h-3 fill-current text-yellow-500" />
               <span className="text-xs font-bold text-gray-700">
-                {item.Rating}
+                {item.rating ?? "4.8"}
               </span>
             </div>
           </div>
@@ -229,27 +104,29 @@ const CourseCard: React.FC<CourseCardProps> = ({
           <div className="flex-1 flex flex-col justify-between">
             <div>
               <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2 line-clamp-2">
-                {item.Title}
+                {item.title}
               </h3>
               <p className="text-sm text-gray-600 mb-2">
-                {item.provider?.Name}
+                {item.courseProvider?.companyName}
               </p>
               <div className="flex flex-wrap gap-2 mb-3">
                 <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
                   {item.level}
                 </span>
                 <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                  {item.duration}
+                  {item.duration} hours
                 </span>
-                <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">
-                  {item.students.toLocaleString()} students
-                </span>
+                {item.instructor && (
+                  <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">
+                    {item.instructor.firstName} {item.instructor.lastName}
+                  </span>
+                )}
               </div>
             </div>
 
             <div className="flex items-center justify-between">
               <span className="text-xl font-bold text-teal-600">
-                {item.Fees} EGP
+                {item.courseFee} EGP
               </span>
               <Heart className="w-5 h-5 text-gray-400 hover:text-red-500 transition-colors" />
             </div>
@@ -265,35 +142,47 @@ const CourseCard: React.FC<CourseCardProps> = ({
       className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer p-3 sm:p-4 border border-gray-100"
     >
       <div className="relative mb-3">
-        <img
-          src={item.Image}
-          alt={item.Title}
-          className="w-full h-40 sm:h-48 object-cover rounded-lg"
-        />
+        <div className="w-full h-40 sm:h-48 bg-gray-200 flex items-center justify-center rounded-lg">
+          {item.courseImage ? (
+            <img
+              src={item.courseImage}
+              alt={item.title}
+              className="object-cover w-full h-full rounded-lg"
+            />
+          ) : (
+            <span className="text-sm font-bold text-gray-400">
+              {item.title}
+            </span>
+          )}
+        </div>
         <div className="absolute top-2 right-2 bg-white/90 px-2 py-1 rounded-full flex items-center gap-1">
           <Star className="w-3 h-3 fill-current text-yellow-500" />
-          <span className="text-xs font-bold text-gray-700">{item.Rating}</span>
+          <span className="text-xs font-bold text-gray-700">
+            {item.rating ?? "4.8"}
+          </span>
         </div>
       </div>
 
       <div className="space-y-2">
         <h3 className="text-base sm:text-lg font-bold text-gray-800 line-clamp-2">
-          {item.Title}
+          {item.title}
         </h3>
-        <p className="text-sm text-gray-600">{item.provider?.Name}</p>
+        <p className="text-sm text-gray-600">
+          {item.courseProvider?.companyName}
+        </p>
 
         <div className="flex flex-wrap gap-1">
           <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
             {item.level}
           </span>
           <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-            {item.duration}
+            {item.duration} hours
           </span>
         </div>
 
         <div className="flex items-center justify-between pt-2">
           <span className="text-lg font-bold text-teal-600">
-            {item.Fees} EGP
+            {item.courseFee} EGP
           </span>
           <Heart className="w-5 h-5 text-gray-400 hover:text-red-500 transition-colors" />
         </div>
@@ -541,45 +430,87 @@ const NoResults: React.FC = () => (
 
 // Main Component
 const CoursesPage: React.FC = () => {
+  const [courses, setCourses] = useState<Course[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [sortBy, setSortBy] = useState("newest");
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [loading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const router = useRouter(); // Add this line
+  const router = useRouter();
+
+  useEffect(() => {
+    async function fetchCourses() {
+      setLoading(true);
+      try {
+        console.log("Fetching courses from API...");
+        const res = await fetch("/api/courses");
+        console.log("API Response status:", res.status);
+
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
+        const data = await res.json();
+        console.log("Fetched courses data:", data);
+        console.log("Number of courses:", data.length);
+
+        setCourses(data);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchCourses();
+  }, []);
 
   // Filter and sort courses
-  let filteredCourses = dummyCourses.filter((course) => {
+  let filteredCourses = courses.filter((course) => {
     const matchesCategory =
-      selectedCategory === "All" || course.category === selectedCategory;
+      selectedCategory === "All" ||
+      course.category === selectedCategory ||
+      course.courseType?.toLowerCase().includes(selectedCategory.toLowerCase());
+
     const matchesSearch =
-      course.Title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      course.provider.Name.toLowerCase().includes(searchTerm.toLowerCase());
+      course.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.courseProvider?.companyName
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      course.instructor?.firstName
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      course.instructor?.lastName
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
     return matchesCategory && matchesSearch;
   });
 
-  // Sorting logic
   filteredCourses = [...filteredCourses].sort((a, b) => {
     switch (sortBy) {
       case "price-low":
-        return a.Fees - b.Fees;
+        return parseFloat(a.courseFee) - parseFloat(b.courseFee);
       case "price-high":
-        return b.Fees - a.Fees;
+        return parseFloat(b.courseFee) - parseFloat(a.courseFee);
       case "rating":
-        return b.Rating - a.Rating;
+        return (b.rating ?? 0) - (a.rating ?? 0);
       case "popular":
-        return b.students - a.students;
+        return (b.totalRatings ?? 0) - (a.totalRatings ?? 0);
       case "oldest":
-        return a.id.localeCompare(b.id);
+        return (
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
       case "newest":
       default:
-        return b.id.localeCompare(a.id);
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
     }
   });
 
-  const handleCardPress = (id: string) => {
-    router.push(`/courses/1`); // Redirect to course details page
+  const handleCardPress = (slug: string) => {
+    router.push(`/courses/${slug}`);
   };
 
   return (
@@ -601,8 +532,27 @@ const CoursesPage: React.FC = () => {
           <div className="flex justify-center py-20">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-500"></div>
           </div>
-        ) : filteredCourses.length === 0 ? (
-          <NoResults />
+        ) : courses.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="text-6xl mb-4">📚</div>
+            <h3 className="text-xl font-bold text-gray-700 mb-2">
+              No courses found
+            </h3>
+            <p className="text-gray-500 text-center">
+              {searchTerm || selectedCategory !== "All"
+                ? "Try adjusting your search or filter criteria"
+                : "No courses available in the database"}
+            </p>
+            <button
+              onClick={() => {
+                console.log("Current courses state:", courses);
+                console.log("Filtered courses:", filteredCourses);
+              }}
+              className="mt-4 px-4 py-2 bg-teal-500 text-white rounded-lg text-sm"
+            >
+              Debug: Log Course Data
+            </button>
+          </div>
         ) : (
           <div
             className={
@@ -615,7 +565,7 @@ const CoursesPage: React.FC = () => {
               <CourseCard
                 key={course.id}
                 item={course}
-                onPress={() => handleCardPress(course.id)}
+                onPress={() => handleCardPress(course.slug)}
                 viewMode={viewMode}
               />
             ))}

@@ -1,652 +1,554 @@
 const { PrismaClient } = require("@prisma/client");
-const bcrypt = require("bcrypt");
+const { faker } = require("@faker-js/faker");
 
 const prisma = new PrismaClient();
 
-// Helper function to hash passwords
-async function hashPassword(password) {
-  return await bcrypt.hash(password, 10);
+// Helper function to generate slug from title
+function generateSlug(title) {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "_")
+    .replace(/-+/g, "_")
+    .trim();
 }
 
-// Generate random dates
-function randomDate(start, end) {
-  return new Date(
-    start.getTime() + Math.random() * (end.getTime() - start.getTime())
-  );
-}
-
-// Generate random rating
-function randomRating() {
-  return Math.round((Math.random() * 4 + 1) * 10) / 10; // 1.0 to 5.0
+// Helper function to generate random array elements
+function getRandomElements(array, count) {
+  const shuffled = [...array].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, count);
 }
 
 async function main() {
   console.log("🌱 Starting database seeding...");
 
-  // Clear existing data (in correct order due to foreign key constraints)
-  console.log("🧹 Clearing existing data...");
-  await prisma.assistant.deleteMany();
-  await prisma.courseRequest.deleteMany();
-  await prisma.course.deleteMany();
-  await prisma.roadmap.deleteMany();
-  await prisma.certificate.deleteMany();
-  await prisma.education.deleteMany();
-  await prisma.instructor.deleteMany();
-  await prisma.courseProvider.deleteMany();
-  await prisma.user.deleteMany();
-  await prisma.admin.deleteMany();
+  try {
+    // Clear existing data (optional - remove if you want to keep existing data)
+    console.log("🧹 Cleaning existing data...");
+    await prisma.courseRequest.deleteMany();
+    await prisma.course.deleteMany();
+    await prisma.roadmap.deleteMany();
+    await prisma.instructor.deleteMany();
+    await prisma.certificate.deleteMany();
+    await prisma.education.deleteMany();
+    await prisma.courseCategory.deleteMany();
+    await prisma.courseProvider.deleteMany();
+    await prisma.user.deleteMany();
+    await prisma.admin.deleteMany();
 
-  // Create Admins
-  console.log("👑 Creating admins...");
-  const admins = await Promise.all([
-    prisma.admin.create({
-      data: {
-        firstName: "John",
-        lastName: "Admin",
-        email: "john.admin@example.com",
-        password: await hashPassword("admin123"),
-        phoneNumber: "+1234567890",
-        profilePicture: "https://example.com/admin1.jpg",
-      },
-    }),
-    prisma.admin.create({
-      data: {
-        firstName: "Sarah",
-        lastName: "Manager",
-        email: "sarah.manager@example.com",
-        password: await hashPassword("admin123"),
-        phoneNumber: "+1234567891",
-        profilePicture: "https://example.com/admin2.jpg",
-      },
-    }),
-  ]);
-
-  // Create Instructors
-  console.log("👨‍🏫 Creating instructors...");
-  const instructors = await Promise.all([
-    prisma.instructor.create({
-      data: {
-        firstName: "Dr. Michael",
-        lastName: "Johnson",
-        email: "michael.johnson@example.com",
-        password: await hashPassword("instructor123"),
-        phoneNumber: "+1234567892",
-        instructorClass: "A",
-        age: 45,
-        rating: randomRating(),
-        cv: "https://example.com/cv1.pdf",
-        profilePicture: "https://example.com/instructor1.jpg",
-        bio: "Experienced software architect with 15+ years in web development",
-        specialization: "Full Stack Development",
-        experience: 15,
-      },
-    }),
-    prisma.instructor.create({
-      data: {
-        firstName: "Prof. Emily",
-        lastName: "Davis",
-        email: "emily.davis@example.com",
-        password: await hashPassword("instructor123"),
-        phoneNumber: "+1234567893",
-        instructorClass: "B",
-        age: 38,
-        rating: randomRating(),
-        cv: "https://example.com/cv2.pdf",
-        profilePicture: "https://example.com/instructor2.jpg",
-        bio: "React specialist and frontend architecture expert",
-        specialization: "Frontend Development",
-        experience: 12,
-      },
-    }),
-    prisma.instructor.create({
-      data: {
-        firstName: "Dr. Robert",
-        lastName: "Wilson",
-        email: "robert.wilson@example.com",
-        password: await hashPassword("instructor123"),
-        phoneNumber: "+1234567894",
-        instructorClass: "C",
-        age: 52,
-        rating: randomRating(),
-        cv: "https://example.com/cv3.pdf",
-        profilePicture: "https://example.com/instructor3.jpg",
-        bio: "Data scientist and machine learning researcher",
-        specialization: "Data Science & ML",
-        experience: 20,
-      },
-    }),
-  ]);
-
-  // Create Course Providers
-  console.log("🏢 Creating course providers...");
-  const courseProviders = await Promise.all([
-    prisma.courseProvider.create({
-      data: {
-        companyName: "TechEd Solutions",
-        companyDescription:
-          "Leading provider of technology education and professional development courses",
-        website: "https://techedsolutions.com",
-        email: "info@techedsolutions.com",
-        password: await hashPassword("provider123"),
-        phoneNumber: "+1234567800",
-        address: "123 Tech Street, Silicon Valley",
-        city: "San Francisco",
-        country: "USA",
-        logo: "https://example.com/teched-logo.png",
-        coverImage: "https://example.com/teched-cover.jpg",
-        established: new Date(2018, 0, 1),
-        socialMediaLinks: {
-          linkedin: "https://linkedin.com/company/techedsolutions",
-          twitter: "https://twitter.com/techedsolutions",
-          facebook: "https://facebook.com/techedsolutions",
-          youtube: "https://youtube.com/techedsolutions",
+    // 1. Create Admins
+    console.log("👑 Creating admins...");
+    const admins = [];
+    for (let i = 0; i < 3; i++) {
+      const admin = await prisma.admin.create({
+        data: {
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
+          email: faker.internet.email(),
+          password: faker.internet.password(),
+          phoneNumber: faker.phone.number(),
+          profilePicture: faker.image.avatar(),
         },
-        businessLicense: "BL2018-TECH-001",
-        taxId: "TX-789123456",
-        rating: 4.8,
-        totalStudents: 2500,
-        totalCourses: 15,
-        verified: true,
-        status: "APPROVED",
-        approvedBy: { connect: { id: admins[0].id } },
-      },
-    }),
-    prisma.courseProvider.create({
-      data: {
-        companyName: "DataScience Academy",
-        companyDescription:
-          "Specialized training institute for data science and analytics professionals",
-        website: "https://datascienceacademy.com",
-        email: "contact@datascienceacademy.com",
-        password: await hashPassword("provider123"),
-        phoneNumber: "+1234567801",
-        address: "456 Analytics Ave, Tech District",
-        city: "Boston",
-        country: "USA",
-        logo: "https://example.com/datasci-logo.png",
-        coverImage: "https://example.com/datasci-cover.jpg",
-        established: new Date(2020, 5, 15),
-        socialMediaLinks: {
-          linkedin: "https://linkedin.com/company/datascienceacademy",
-          twitter: "https://twitter.com/datascienceacad",
-          instagram: "https://instagram.com/datascienceacademy",
+      });
+      admins.push(admin);
+    }
+
+    // 2. Create Course Categories
+    console.log("📚 Creating course categories...");
+    const categoryData = [
+      { name: "Web Development", icon: "🌐", color: "#3B82F6" },
+      { name: "Mobile Development", icon: "📱", color: "#10B981" },
+      { name: "Data Science", icon: "📊", color: "#8B5CF6" },
+      { name: "Artificial Intelligence", icon: "🤖", color: "#F59E0B" },
+      { name: "DevOps", icon: "⚙️", color: "#EF4444" },
+      { name: "Cybersecurity", icon: "🔒", color: "#6366F1" },
+      { name: "UI/UX Design", icon: "🎨", color: "#EC4899" },
+      { name: "Cloud Computing", icon: "☁️", color: "#06B6D4" },
+    ];
+
+    const categories = [];
+    for (const cat of categoryData) {
+      const category = await prisma.courseCategory.create({
+        data: {
+          name: cat.name,
+          slug: generateSlug(cat.name),
+          description: faker.lorem.paragraph(),
+          icon: cat.icon,
+          color: cat.color,
         },
-        businessLicense: "BL2020-DATA-002",
-        taxId: "TX-456789123",
-        rating: 4.6,
-        totalStudents: 1200,
-        totalCourses: 8,
-        verified: true,
-        status: "APPROVED",
-        approvedBy: { connect: { id: admins[1].id } },
-      },
-    }),
-    prisma.courseProvider.create({
-      data: {
-        companyName: "Mobile Dev Institute",
-        companyDescription:
-          "Premier mobile application development training center",
-        website: "https://mobiledevinstitute.com",
-        email: "hello@mobiledevinstitute.com",
-        password: await hashPassword("provider123"),
-        phoneNumber: "+1234567802",
-        address: "789 Mobile Plaza, Innovation Hub",
-        city: "Austin",
-        country: "USA",
-        logo: "https://example.com/mobile-logo.png",
-        coverImage: "https://example.com/mobile-cover.jpg",
-        established: new Date(2019, 8, 20),
-        socialMediaLinks: {
-          linkedin: "https://linkedin.com/company/mobiledevinstitute",
-          twitter: "https://twitter.com/mobiledevinst",
-          youtube: "https://youtube.com/mobiledevinstitute",
+      });
+      categories.push(category);
+    }
+
+    // 3. Create Course Providers
+    console.log("🏢 Creating course providers...");
+    const courseProviders = [];
+    for (let i = 0; i < 5; i++) {
+      const companyName = faker.company.name();
+      const provider = await prisma.courseProvider.create({
+        data: {
+          companyName,
+          companyDescription: faker.company.catchPhrase(),
+          website: faker.internet.url(),
+          email: faker.internet.email(),
+          password: faker.internet.password(),
+          phoneNumber: faker.phone.number(),
+          address: faker.location.streetAddress(),
+          city: faker.location.city(),
+          country: faker.location.country(),
+          logo: faker.image.url(),
+          coverImage: faker.image.url(),
+          established: faker.date.past({ years: 10 }),
+          socialMediaLinks: {
+            twitter: faker.internet.url(),
+            linkedin: faker.internet.url(),
+            facebook: faker.internet.url(),
+          },
+          businessLicense: faker.string.alphanumeric(10),
+          taxId: faker.string.numeric(9),
+          rating: faker.number.float({ min: 3.5, max: 5, fractionDigits: 1 }),
+          totalStudents: faker.number.int({ min: 100, max: 5000 }),
+          totalCourses: faker.number.int({ min: 5, max: 50 }),
+          verified: faker.datatype.boolean(),
+          status: faker.helpers.arrayElement([
+            "APPROVED",
+            "PENDING",
+            "REJECTED",
+          ]),
+          adminId: faker.helpers.arrayElement(admins).id,
         },
-        businessLicense: "BL2019-MOB-003",
-        taxId: "TX-123456789",
-        rating: 4.4,
-        totalStudents: 800,
-        totalCourses: 6,
-        verified: false,
-        status: "PENDING",
-      },
-    }),
-  ]);
+      });
+      courseProviders.push(provider);
+    }
 
-  // Update some instructors to belong to course providers
-  console.log("🔗 Assigning instructors to course providers...");
-  await prisma.instructor.update({
-    where: { id: instructors[0].id },
-    data: { courseProviderId: courseProviders[0].id },
-  });
-
-  await prisma.instructor.update({
-    where: { id: instructors[1].id },
-    data: { courseProviderId: courseProviders[0].id },
-  });
-
-  await prisma.instructor.update({
-    where: { id: instructors[2].id },
-    data: { courseProviderId: courseProviders[1].id },
-  });
-
-  // Create additional independent instructor
-  const independentInstructor = await prisma.instructor.create({
-    data: {
-      firstName: "Sarah",
-      lastName: "Thompson",
-      email: "sarah.thompson@example.com",
-      password: await hashPassword("instructor123"),
-      phoneNumber: "+1234567899",
-      instructorClass: "A",
-      age: 35,
-      rating: randomRating(),
-      cv: "https://example.com/cv4.pdf",
-      profilePicture: "https://example.com/instructor4.jpg",
-      bio: "Independent mobile development consultant",
-      specialization: "Mobile Development",
-      experience: 10,
-      // No courseProviderId - independent instructor
-    },
-  });
-
-  // Add independent instructor to instructors array
-  instructors.push(independentInstructor);
-
-  // Create Users
-  console.log("👥 Creating users...");
-  const users = await Promise.all([
-    prisma.user.create({
-      data: {
-        firstName: "Alice",
-        lastName: "Smith",
-        email: "alice.smith@example.com",
-        password: await hashPassword("user123"),
-        phoneNumber: "+1234567895",
-        age: 22,
-        bio: "Computer Science student passionate about web development",
-        profilePhoto: "https://example.com/user1.jpg",
-      },
-    }),
-    prisma.user.create({
-      data: {
-        firstName: "Bob",
-        lastName: "Brown",
-        email: "bob.brown@example.com",
-        password: await hashPassword("user123"),
-        phoneNumber: "+1234567896",
-        age: 25,
-        bio: "Software engineer looking to expand my skills",
-        profilePhoto: "https://example.com/user2.jpg",
-        isAssistant: true,
-      },
-    }),
-    prisma.user.create({
-      data: {
-        firstName: "Carol",
-        lastName: "Jones",
-        email: "carol.jones@example.com",
-        password: await hashPassword("user123"),
-        phoneNumber: "+1234567897",
-        age: 28,
-        bio: "Data analyst transitioning to machine learning",
-        profilePhoto: "https://example.com/user3.jpg",
-      },
-    }),
-    prisma.user.create({
-      data: {
-        firstName: "David",
-        lastName: "Miller",
-        email: "david.miller@example.com",
-        password: await hashPassword("user123"),
-        phoneNumber: "+1234567898",
-        age: 24,
-        bio: "Recent graduate interested in full-stack development",
-        profilePhoto: "https://example.com/user4.jpg",
-      },
-    }),
-    prisma.user.create({
-      data: {
-        firstName: "Eva",
-        lastName: "Garcia",
-        email: "eva.garcia@example.com",
-        password: await hashPassword("user123"),
-        phoneNumber: "+1234567899",
-        age: 26,
-        bio: "UX designer learning frontend development",
-        profilePhoto: "https://example.com/user5.jpg",
-      },
-    }),
-  ]);
-
-  // Create Education records
-  console.log("🎓 Creating education records...");
-  await Promise.all([
-    prisma.education.create({
-      data: {
-        userId: users[0].id,
-        university: "MIT",
-        college: "School of Engineering",
-        department: "Computer Science",
-        yearOfGraduation: 2023,
-        degree: "Bachelor of Science",
-        universityId: "MIT001",
-        photo: "https://example.com/degree1.jpg",
-      },
-    }),
-    prisma.education.create({
-      data: {
-        userId: users[1].id,
-        university: "Stanford University",
-        college: "School of Engineering",
-        department: "Software Engineering",
-        yearOfGraduation: 2021,
-        degree: "Master of Science",
-        universityId: "STAN001",
-        photo: "https://example.com/degree2.jpg",
-      },
-    }),
-    prisma.education.create({
-      data: {
-        userId: users[2].id,
-        university: "UC Berkeley",
-        college: "College of Computing",
-        department: "Data Science",
-        yearOfGraduation: 2020,
-        degree: "Bachelor of Science",
-        universityId: "UCB001",
-        photo: "https://example.com/degree3.jpg",
-      },
-    }),
-  ]);
-
-  // Create Certificates
-  console.log("📜 Creating certificates...");
-  await Promise.all([
-    prisma.certificate.create({
-      data: {
-        userId: users[0].id,
-        name: "AWS Certified Solutions Architect",
-        file: "https://example.com/cert1.pdf",
-        issueDate: randomDate(new Date(2023, 0, 1), new Date()),
-        institute: "Amazon Web Services",
-      },
-    }),
-    prisma.certificate.create({
-      data: {
-        userId: users[1].id,
-        name: "Google Cloud Professional Developer",
-        file: "https://example.com/cert2.pdf",
-        issueDate: randomDate(new Date(2023, 0, 1), new Date()),
-        institute: "Google Cloud",
-      },
-    }),
-    prisma.certificate.create({
-      data: {
-        userId: users[2].id,
-        name: "Microsoft Azure Fundamentals",
-        file: "https://example.com/cert3.pdf",
-        issueDate: randomDate(new Date(2023, 0, 1), new Date()),
-        institute: "Microsoft",
-      },
-    }),
-  ]);
-
-  // Create Roadmaps
-  console.log("🗺️ Creating roadmaps...");
-  const roadmaps = await Promise.all([
-    prisma.roadmap.create({
-      data: {
-        title: "Full Stack Web Development",
-        description: "Complete roadmap for becoming a full-stack web developer",
-        adminId: admins[0].id,
-        status: "APPROVED",
-        instructors: {
-          connect: [{ id: instructors[0].id }, { id: instructors[1].id }],
+    // 4. Create Users
+    console.log("👥 Creating users...");
+    const users = [];
+    for (let i = 0; i < 50; i++) {
+      const user = await prisma.user.create({
+        data: {
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
+          phoneNumber: faker.phone.number(),
+          profilePhoto: faker.image.avatar(),
+          email: faker.internet.email(),
+          password: faker.internet.password(),
+          age: faker.number.int({ min: 18, max: 65 }),
+          bio: faker.lorem.paragraph(),
         },
-        students: {
-          connect: [
-            { id: users[0].id },
-            { id: users[1].id },
-            { id: users[3].id },
+      });
+      users.push(user);
+    }
+
+    // 5. Create Education records for users
+    console.log("🎓 Creating education records...");
+    for (const user of users.slice(0, 30)) {
+      await prisma.education.create({
+        data: {
+          userId: user.id,
+          university: faker.helpers.arrayElement([
+            "Harvard University",
+            "MIT",
+            "Stanford University",
+            "University of California",
+            "Oxford University",
+            "Cambridge University",
+          ]),
+          college: faker.helpers.arrayElement([
+            "College of Engineering",
+            "College of Computer Science",
+            "Business School",
+            "College of Arts and Sciences",
+          ]),
+          department: faker.helpers.arrayElement([
+            "Computer Science",
+            "Software Engineering",
+            "Information Technology",
+            "Business Administration",
+            "Data Science",
+          ]),
+          yearOfGraduation: faker.number.int({ min: 2015, max: 2024 }),
+          degree: faker.helpers.arrayElement(["Bachelor", "Master", "PhD"]),
+          universityId: faker.string.alphanumeric(8),
+          photo: faker.image.url(),
+        },
+      });
+    }
+
+    // 6. Create Instructors
+    console.log("👨‍🏫 Creating instructors...");
+    const instructors = [];
+    const skills = [
+      "JavaScript",
+      "Python",
+      "React",
+      "Node.js",
+      "Docker",
+      "AWS",
+      "Machine Learning",
+      "Data Analysis",
+      "UI/UX Design",
+      "Cybersecurity",
+      "DevOps",
+      "Mobile Development",
+    ];
+
+    for (let i = 0; i < 20; i++) {
+      const instructor = await prisma.instructor.create({
+        data: {
+          profilePicture: faker.image.avatar(),
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
+          phoneNumber: faker.phone.number(),
+          instructorClass: faker.helpers.arrayElement(["A", "B", "C"]),
+          email: faker.internet.email(),
+          password: faker.internet.password(),
+          age: faker.number.int({ min: 25, max: 65 }),
+          rating: faker.number.float({ min: 3.5, max: 5, fractionDigits: 1 }),
+          totalRatings: faker.number.int({ min: 10, max: 500 }),
+          cv: faker.internet.url(),
+          bio: faker.lorem.paragraphs(2),
+          specialization: faker.helpers.arrayElement([
+            "Full Stack Development",
+            "Data Science",
+            "Mobile Development",
+            "DevOps Engineering",
+            "UI/UX Design",
+          ]),
+          experience: faker.number.int({ min: 2, max: 15 }),
+          expertise: getRandomElements(
+            skills,
+            faker.number.int({ min: 3, max: 6 })
+          ),
+          certifications: [
+            "AWS Certified Solutions Architect",
+            "Google Cloud Professional",
+            "Certified Kubernetes Administrator",
           ],
+          linkedinUrl: faker.internet.url(),
+          githubUrl: faker.internet.url(),
+          portfolioUrl: faker.internet.url(),
+          totalStudents: faker.number.int({ min: 50, max: 1000 }),
+          totalCourses: faker.number.int({ min: 2, max: 15 }),
+          courseProviderId: faker.datatype.boolean({ probability: 0.7 })
+            ? faker.helpers.arrayElement(courseProviders).id
+            : null,
         },
-      },
-    }),
-    prisma.roadmap.create({
-      data: {
-        title: "Data Science & Machine Learning",
-        description: "Comprehensive path to master data science and ML",
-        adminId: admins[1].id,
-        status: "APPROVED",
-        instructors: {
-          connect: [{ id: instructors[2].id }],
-        },
-        students: {
-          connect: [{ id: users[2].id }, { id: users[4].id }],
-        },
-      },
-    }),
-    prisma.roadmap.create({
-      data: {
-        title: "Mobile App Development",
-        description: "Learn to build mobile applications for iOS and Android",
-        adminId: admins[0].id,
-        status: "PENDING",
-        instructors: {
-          connect: [{ id: instructors[1].id }],
-        },
-        students: {
-          connect: [{ id: users[1].id }, { id: users[4].id }],
-        },
-      },
-    }),
-  ]);
+      });
+      instructors.push(instructor);
+    }
 
-  // Create Courses
-  console.log("📚 Creating courses...");
-  const courses = await Promise.all([
-    prisma.course.create({
-      data: {
-        title: "JavaScript Fundamentals",
-        description: "Learn the basics of JavaScript programming",
-        instructorId: instructors[0].id,
-        courseProviderId: courseProviders[0].id,
-        roadmapId: roadmaps[0].id,
-        adminId: admins[0].id,
-        status: "PUBLISHED",
-        enrolledStudents: {
-          connect: [{ id: users[0].id }, { id: users[1].id }],
-        },
-      },
-    }),
-    prisma.course.create({
-      data: {
-        title: "React Development",
-        description: "Build modern web applications with React",
-        instructorId: instructors[1].id,
-        courseProviderId: courseProviders[0].id,
-        roadmapId: roadmaps[0].id,
-        adminId: admins[0].id,
-        status: "PUBLISHED",
-        enrolledStudents: {
-          connect: [{ id: users[0].id }, { id: users[3].id }],
-        },
-      },
-    }),
-    prisma.course.create({
-      data: {
-        title: "Node.js Backend Development",
-        description: "Create robust backend applications with Node.js",
-        instructorId: instructors[0].id,
-        courseProviderId: courseProviders[0].id,
-        roadmapId: roadmaps[0].id,
-        adminId: admins[0].id,
-        status: "APPROVED",
-        enrolledStudents: {
-          connect: [{ id: users[1].id }, { id: users[3].id }],
-        },
-      },
-    }),
-    prisma.course.create({
-      data: {
-        title: "Python for Data Science",
-        description: "Learn Python programming for data analysis",
-        instructorId: instructors[2].id,
-        courseProviderId: courseProviders[1].id,
-        roadmapId: roadmaps[1].id,
-        adminId: admins[1].id,
-        status: "PUBLISHED",
-        enrolledStudents: {
-          connect: [{ id: users[2].id }, { id: users[4].id }],
-        },
-      },
-    }),
-    prisma.course.create({
-      data: {
-        title: "Machine Learning Algorithms",
-        description: "Understanding and implementing ML algorithms",
-        instructorId: instructors[2].id,
-        courseProviderId: courseProviders[1].id,
-        roadmapId: roadmaps[1].id,
-        adminId: admins[1].id,
-        status: "PENDING",
-        enrolledStudents: {
-          connect: [{ id: users[2].id }],
-        },
-      },
-    }),
-    prisma.course.create({
-      data: {
-        title: "iOS Development with Swift",
-        description: "Create native iOS applications using Swift",
-        instructorId: instructors[3].id, // Independent instructor
-        // No courseProviderId - independent course
-        roadmapId: roadmaps[2].id,
-        adminId: admins[0].id,
-        status: "PUBLISHED",
-        enrolledStudents: {
-          connect: [{ id: users[1].id }, { id: users[4].id }],
-        },
-      },
-    }),
-  ]);
+    // 7. Create Roadmaps
+    console.log("🗺️ Creating roadmaps...");
+    const roadmaps = [];
+    const roadmapTitles = [
+      "Full Stack Web Developer",
+      "Data Scientist Career Path",
+      "Mobile App Developer",
+      "DevOps Engineer Roadmap",
+      "AI/ML Specialist Track",
+      "Cybersecurity Expert Path",
+      "UI/UX Designer Journey",
+      "Cloud Architect Roadmap",
+    ];
 
-  // Create Course Requests
-  console.log("📋 Creating course requests...");
-  await Promise.all([
-    prisma.courseRequest.create({
-      data: {
-        title: "Advanced React Patterns",
-        description: "Deep dive into advanced React concepts and patterns",
-        roadmapName: "Full Stack Web Development",
-        duration: 8,
-        courseOutline:
-          "Week 1: Higher-Order Components\nWeek 2: Render Props\nWeek 3: Hooks Patterns\nWeek 4: Context API\nWeek 5: Performance Optimization\nWeek 6: Testing Strategies\nWeek 7: State Management\nWeek 8: Project Implementation",
-        location: "Online",
-        startDate: new Date(2024, 8, 15), // September 15, 2024
-        courseImage: "https://example.com/course1.jpg",
-        numberOfSessions: 16,
-        sessionDuration: 90,
-        instructorId: instructors[1].id,
-        status: "PENDING",
-      },
-    }),
-    prisma.courseRequest.create({
-      data: {
-        title: "Deep Learning with TensorFlow",
-        description: "Build neural networks and deep learning models",
-        roadmapName: "Data Science & Machine Learning",
-        duration: 12,
-        courseOutline:
-          "Introduction to Deep Learning\nNeural Networks Fundamentals\nConvolutional Neural Networks\nRecurrent Neural Networks\nTransformer Models\nModel Deployment",
-        location: "Hybrid",
-        startDate: new Date(2024, 9, 1), // October 1, 2024
-        courseImage: "https://example.com/course2.jpg",
-        numberOfSessions: 24,
-        sessionDuration: 120,
-        instructorId: instructors[2].id,
-        status: "ACCEPTED",
-      },
-    }),
-    prisma.courseRequest.create({
-      data: {
-        title: "Flutter Mobile Development",
-        description: "Create cross-platform mobile applications with Flutter",
-        roadmapName: "Mobile App Development",
-        duration: 10,
-        courseOutline:
-          "Flutter Fundamentals\nDart Programming\nWidgets and Layouts\nState Management\nAPI Integration\nApp Store Deployment",
-        location: "In-person",
-        startDate: new Date(2024, 10, 1), // November 1, 2024
-        courseImage: "https://example.com/course3.jpg",
-        numberOfSessions: 20,
-        sessionDuration: 180,
-        instructorId: instructors[3].id, // Independent instructor
-        status: "REJECTED",
-      },
-    }),
-  ]);
+    for (let i = 0; i < roadmapTitles.length; i++) {
+      const title = roadmapTitles[i];
+      const roadmap = await prisma.roadmap.create({
+        data: {
+          title,
+          slug: generateSlug(title),
+          description: faker.lorem.paragraphs(3),
+          shortDescription: faker.lorem.sentence(),
+          roadmapImage: faker.image.url(),
+          level: faker.helpers.arrayElement([
+            "BEGINNER",
+            "INTERMEDIATE",
+            "ADVANCED",
+          ]),
+          estimatedDuration: faker.number.int({ min: 100, max: 500 }),
+          totalCourses: faker.number.int({ min: 3, max: 8 }),
+          prerequisites: getRandomElements(
+            [
+              "Basic programming knowledge",
+              "Understanding of web technologies",
+              "Mathematical foundation",
+              "Problem-solving skills",
+            ],
+            faker.number.int({ min: 1, max: 3 })
+          ),
+          learningGoals: [
+            "Master core technologies",
+            "Build real-world projects",
+            "Understand best practices",
+            "Prepare for job interviews",
+          ],
+          careerOutcomes: [
+            "Software Developer",
+            "Senior Engineer",
+            "Technical Lead",
+            "Freelance Consultant",
+          ],
+          sequence: [], // Will be updated after creating courses
+          isLinear: faker.datatype.boolean(),
+          adminId: faker.helpers.arrayElement(admins).id,
+          categoryId: categories[i % categories.length].id,
+          status: faker.helpers.arrayElement([
+            "APPROVED",
+            "PUBLISHED",
+            "PENDING",
+          ]),
+        },
+      });
+      roadmaps.push(roadmap);
+    }
 
-  // Create Assistant Applications
-  console.log("🤝 Creating assistant applications...");
-  await Promise.all([
-    prisma.assistant.create({
-      data: {
-        studentId: users[1].id, // Bob (isAssistant: true)
-        courseId: courses[0].id, // JavaScript Fundamentals
-        status: "APPROVED",
-        reviewedBy: { connect: { id: admins[0].id } },
-        rating: randomRating(),
-      },
-    }),
-    prisma.assistant.create({
-      data: {
-        studentId: users[1].id, // Bob
-        courseId: courses[1].id, // React Development
-        status: "APPROVED",
-        reviewedBy: { connect: { id: admins[0].id } },
-        rating: randomRating(),
-      },
-    }),
-    prisma.assistant.create({
-      data: {
-        studentId: users[0].id, // Alice
-        courseId: courses[0].id, // JavaScript Fundamentals
-        status: "PENDING",
-      },
-    }),
-    prisma.assistant.create({
-      data: {
-        studentId: users[2].id, // Carol
-        courseId: courses[3].id, // Python for Data Science
-        status: "REJECTED",
-        reviewedBy: { connect: { id: admins[1].id } },
-        rating: 0.0,
-      },
-    }),
-  ]);
+    // 8. Create Courses
+    console.log("📖 Creating courses...");
+    const courses = [];
+    const courseTitles = [
+      "Introduction to Web Development",
+      "Advanced JavaScript Concepts",
+      "React for Beginners",
+      "Node.js Backend Development",
+      "Python Data Science Fundamentals",
+      "Machine Learning with TensorFlow",
+      "Mobile App Development with React Native",
+      "Docker and Containerization",
+      "AWS Cloud Fundamentals",
+      "Cybersecurity Basics",
+      "UI/UX Design Principles",
+      "Database Design and SQL",
+      "DevOps with Jenkins and GitHub Actions",
+      "Advanced Python Programming",
+      "Full Stack Project Development",
+    ];
 
-  console.log("✅ Database seeding completed successfully!");
-  console.log("\n📊 Summary:");
-  console.log(`- Admins: ${admins.length}`);
-  console.log(`- Instructors: ${instructors.length}`);
-  console.log(`- Users: ${users.length}`);
-  console.log(`- Roadmaps: ${roadmaps.length}`);
-  console.log(`- Courses: ${courses.length}`);
-  console.log(`- Education records: 3`);
-  console.log(`- Certificates: 3`);
-  console.log(`- Course requests: 3`);
-  console.log(`- Assistant applications: 4`);
+    for (let i = 0; i < courseTitles.length; i++) {
+      const title = courseTitles[i];
+      const courseType = faker.helpers.arrayElement([
+        "ONLINE",
+        "OFFLINE",
+        "HYBRID",
+      ]);
 
-  console.log("\n🔐 Default login credentials:");
-  console.log("Admin: john.admin@example.com / admin123");
-  console.log("Instructor: michael.johnson@example.com / instructor123");
-  console.log("User: alice.smith@example.com / user123");
+      const course = await prisma.course.create({
+        data: {
+          title,
+          slug: generateSlug(title),
+          description: faker.lorem.paragraphs(3),
+          shortDescription: faker.lorem.sentence(),
+          courseImage: faker.image.url(),
+          courseFee: faker.number.float({
+            min: 99,
+            max: 999,
+            fractionDigits: 2,
+          }),
+          rating: faker.number.float({ min: 3.5, max: 5, fractionDigits: 1 }),
+          totalRatings: faker.number.int({ min: 10, max: 500 }),
+          level: faker.helpers.arrayElement([
+            "BEGINNER",
+            "INTERMEDIATE",
+            "ADVANCED",
+          ]),
+          duration: faker.number.int({ min: 20, max: 120 }),
+          courseType,
+          language: faker.helpers.arrayElement([
+            "English",
+            "Arabic",
+            "Spanish",
+          ]),
+
+          // Location fields (for offline courses)
+          address:
+            courseType !== "ONLINE" ? faker.location.streetAddress() : null,
+          city: courseType !== "ONLINE" ? faker.location.city() : null,
+          country: courseType !== "ONLINE" ? faker.location.country() : null,
+          venue:
+            courseType !== "ONLINE"
+              ? faker.company.name() + " Training Center"
+              : null,
+
+          // Course structure
+          totalLessons: faker.number.int({ min: 10, max: 50 }),
+          totalProjects: faker.number.int({ min: 1, max: 5 }),
+          hasCapstoneProject: faker.datatype.boolean(),
+          hasCertificate: faker.datatype.boolean({ probability: 0.8 }),
+
+          // Prerequisites and outcomes
+          prerequisites: getRandomElements(
+            [
+              "Basic programming knowledge",
+              "Understanding of web technologies",
+              "Mathematical foundation",
+              "Problem-solving skills",
+            ],
+            faker.number.int({ min: 0, max: 3 })
+          ),
+          learningOutcomes: [
+            "Master the fundamental concepts",
+            "Build practical projects",
+            "Understand industry best practices",
+            "Prepare for advanced topics",
+          ],
+          courseOutline: faker.lorem.paragraphs(5),
+
+          // Enrollment details
+          maxStudents: faker.number.int({ min: 20, max: 100 }),
+          currentStudents: faker.number.int({ min: 5, max: 80 }),
+          startDate: faker.date.future(),
+          endDate: faker.date.future(),
+          enrollmentDeadline: faker.date.soon(),
+
+          // Relationships
+          instructorId: faker.helpers.arrayElement(instructors).id,
+          courseProviderId: faker.datatype.boolean({ probability: 0.6 })
+            ? faker.helpers.arrayElement(courseProviders).id
+            : null,
+          roadmapId: faker.datatype.boolean({ probability: 0.8 })
+            ? faker.helpers.arrayElement(roadmaps).id
+            : null,
+          adminId: faker.helpers.arrayElement(admins).id,
+          categoryId: faker.helpers.arrayElement(categories).id,
+          status: faker.helpers.arrayElement([
+            "APPROVED",
+            "PUBLISHED",
+            "PENDING",
+          ]),
+        },
+      });
+      courses.push(course);
+    }
+
+    // 9. Create Course Enrollments
+    console.log("📝 Creating course enrollments...");
+    for (const course of courses) {
+      const enrolledUsers = getRandomElements(
+        users,
+        faker.number.int({ min: 5, max: 15 })
+      );
+      await prisma.course.update({
+        where: { id: course.id },
+        data: {
+          enrolledStudents: {
+            connect: enrolledUsers.map((user) => ({ id: user.id })),
+          },
+        },
+      });
+    }
+
+    // 10. Create Roadmap Enrollments
+    console.log("🗺️ Creating roadmap enrollments...");
+    for (const roadmap of roadmaps) {
+      const enrolledUsers = getRandomElements(
+        users,
+        faker.number.int({ min: 3, max: 10 })
+      );
+      await prisma.roadmap.update({
+        where: { id: roadmap.id },
+        data: {
+          students: {
+            connect: enrolledUsers.map((user) => ({ id: user.id })),
+          },
+        },
+      });
+    }
+
+    // 11. Create Certificates
+    console.log("🏆 Creating certificates...");
+    for (let i = 0; i < 30; i++) {
+      await prisma.certificate.create({
+        data: {
+          userId: faker.helpers.arrayElement(users).id,
+          name: faker.helpers.arrayElement([
+            "JavaScript Fundamentals Certificate",
+            "React Developer Certification",
+            "Python Data Science Certificate",
+            "AWS Cloud Practitioner",
+            "Google Analytics Certified",
+          ]),
+          file: faker.internet.url(),
+          issueDate: faker.date.past(),
+          institute: faker.helpers.arrayElement([
+            "Coursera",
+            "edX",
+            "Udacity",
+            "Google",
+            "Microsoft",
+            "AWS",
+          ]),
+        },
+      });
+    }
+
+    // 12. Create Course Requests
+    console.log("📋 Creating course requests...");
+    for (let i = 0; i < 10; i++) {
+      const courseType = faker.helpers.arrayElement([
+        "ONLINE",
+        "OFFLINE",
+        "HYBRID",
+      ]);
+      await prisma.courseRequest.create({
+        data: {
+          title: faker.lorem.words(3),
+          description: faker.lorem.paragraphs(2),
+          roadmapName: faker.helpers.arrayElement(roadmapTitles),
+          duration: faker.number.int({ min: 20, max: 100 }),
+          courseOutline: faker.lorem.paragraphs(3),
+          courseFee: faker.number.float({
+            min: 199,
+            max: 1999,
+            fractionDigits: 2,
+          }),
+          level: faker.helpers.arrayElement([
+            "BEGINNER",
+            "INTERMEDIATE",
+            "ADVANCED",
+          ]),
+          courseType,
+          location: courseType !== "ONLINE" ? faker.location.city() : null,
+          address:
+            courseType !== "ONLINE" ? faker.location.streetAddress() : null,
+          city: courseType !== "ONLINE" ? faker.location.city() : null,
+          country: courseType !== "ONLINE" ? faker.location.country() : null,
+          startDate: faker.date.future(),
+          endDate: faker.date.future(),
+          courseImage: faker.image.url(),
+          numberOfSessions: faker.number.int({ min: 8, max: 24 }),
+          sessionDuration: faker.number.int({ min: 60, max: 180 }),
+          maxStudents: faker.number.int({ min: 15, max: 50 }),
+          instructorId: faker.helpers.arrayElement(instructors).id,
+          status: faker.helpers.arrayElement([
+            "PENDING",
+            "ACCEPTED",
+            "REJECTED",
+          ]),
+        },
+      });
+    }
+
+    console.log("✅ Database seeding completed successfully!");
+    console.log(`Created:
+    - ${admins.length} admins
+    - ${categories.length} course categories
+    - ${courseProviders.length} course providers
+    - ${users.length} users
+    - ${instructors.length} instructors
+    - ${roadmaps.length} roadmaps
+    - ${courses.length} courses
+    - 30 certificates
+    - 10 course requests
+    - Course and roadmap enrollments`);
+  } catch (error) {
+    console.error("❌ Error seeding database:", error);
+    throw error;
+  }
 }
 
 main()
   .catch((e) => {
-    console.error("❌ Error during seeding:", e);
+    console.error(e);
     process.exit(1);
   })
   .finally(async () => {
