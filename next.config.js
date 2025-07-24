@@ -6,6 +6,7 @@ module.exports = {
       "picsum.photos",
       "loremflickr.com",
       "images.unsplash.com",
+      "img.clerk.com",
     ],
   },
 };

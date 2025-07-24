@@ -76,6 +76,8 @@ export default function Profile() {
                         ? user.imageUrl
                         : "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg"
                     }
+                    width={100} // set to your desired width
+                    height={100}
                     alt="Profile"
                     className="w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 rounded-full object-cover"
                   />

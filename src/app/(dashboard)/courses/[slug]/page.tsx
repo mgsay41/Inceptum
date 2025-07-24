@@ -120,14 +120,12 @@ const CourseDetailsPage: React.FC = () => {
               <ArrowLeft className="w-5 h-5 text-white" />
             </button>
 
-            <div className="flex items-center gap-3">
-              <button className="p-2 hover:bg-white/20 rounded-full transition-colors">
-                <Heart className="w-6 h-6 text-white" />
-              </button>
-              <button className="p-2 hover:bg-white/20 rounded-full transition-colors">
-                <Send className="w-6 h-6 text-white" />
-              </button>
-            </div>
+            <button
+              className="flex items-center justify-center w-11 h-11 bg-teal-500 rounded-full hover:bg-teal-600 transition-colors"
+              // Add your onClick handler here if needed
+            >
+              <Send className="w-5 h-5 text-white" />
+            </button>
           </div>
         </div>
       </div>

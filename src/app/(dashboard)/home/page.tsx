@@ -60,6 +60,8 @@ const FeaturedCard: React.FC<FeaturedCardProps> = ({ item, onPress }) => (
       {item.courseImage ? (
         <Image
           src={item.courseImage}
+          width={100} // set to your desired width
+          height={100}
           alt={item.title}
           className="object-cover w-full h-full"
         />
@@ -111,6 +113,8 @@ const CourseCard: React.FC<CourseCardProps> = ({
         {item.courseImage ? (
           <Image
             src={item.courseImage}
+            width={100} // set to your desired width
+            height={100}
             alt={item.title}
             className="object-cover w-full h-full rounded-lg"
           />
@@ -250,6 +254,8 @@ const CoursesApp: React.FC = () => {
                     ? user.imageUrl
                     : "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
                 }
+                width={100} // set to your desired width
+                height={100}
                 alt="Profile"
                 className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover"
               />

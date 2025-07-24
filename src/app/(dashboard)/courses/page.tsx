@@ -86,6 +86,8 @@ const CourseCard: React.FC<CourseCardProps> = ({
                 <Image
                   src={item.courseImage}
                   alt={item.title}
+                  width={100} // set to your desired width
+                  height={100}
                   className="object-cover w-full h-full rounded-lg"
                 />
               ) : (
@@ -148,6 +150,8 @@ const CourseCard: React.FC<CourseCardProps> = ({
             <Image
               src={item.courseImage}
               alt={item.title}
+              width={100} // set to your desired width
+              height={100}
               className="object-cover w-full h-full rounded-lg"
             />
           ) : (
