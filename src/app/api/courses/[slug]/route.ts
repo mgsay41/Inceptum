@@ -9,8 +9,8 @@ export async function GET(
 ) {
   const { slug } = params;
 
-  const course = await prisma.course.findUnique({
-    where: { slug }, // This should work since slug is unique in your schema
+  const course = await prisma.course.findFirst({
+    where: { slug },
     include: {
       courseProvider: { select: { companyName: true, logo: true } },
       instructor: {
