@@ -114,6 +114,7 @@ model Course {
   shortDescription   String?         // Brief summary for cards/listings
   courseImage        String?         // Course thumbnail/cover image
   courseFee          Decimal         @db.Decimal(10, 2) // Course price
+  paymentLink        String?         // Payment link for course enrollment
   rating             Float?          @default(0.0) // Average rating out of 5
   totalRatings       Int             @default(0)   // Number of ratings
   level              CourseLevel     @default(BEGINNER)
@@ -267,6 +268,7 @@ model CourseRequest {
   duration         Int           // Duration in hours
   courseOutline    String?       @db.Text
   courseFee        Decimal?      @db.Decimal(10, 2)
+  paymentLink      String?       // Payment link for the course request
   level            CourseLevel   @default(BEGINNER)
   courseType       CourseType    @default(ONLINE)
   

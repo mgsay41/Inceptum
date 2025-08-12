@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-// Categories
+// Categories - updated to match your database
 const categories = [
   { category: "All", title: "All" },
   { category: "programming", title: "Programming" },
@@ -31,9 +31,10 @@ const sortOptions = [
   { value: "price-high", label: "Price: High to Low" },
   { value: "rating", label: "Highest Rated" },
   { value: "popular", label: "Most Popular" },
+  { value: "students", label: "Most Students" },
 ];
 
-// Types - Updated to match database structure
+// Updated types to match backend response
 type Course = {
   id: number;
   title: string;
@@ -43,23 +44,71 @@ type Course = {
   courseImage?: string;
   courseFee: string; // Prisma Decimal comes as string
   rating?: number;
-  totalRatings?: number;
+  totalRatings: number;
   level: string;
   duration: number;
   courseType: string;
   language: string;
+  address?: string;
+  city?: string;
+  country?: string;
+  venue?: string;
+  totalLessons?: number;
+  totalProjects?: number;
+  hasCapstoneProject: boolean;
+  hasCertificate: boolean;
+  prerequisites: string[];
+  learningOutcomes: string[];
+  maxStudents?: number;
+  currentStudents: number;
+  startDate?: string;
+  endDate?: string;
+  enrollmentDeadline?: string;
+  status: string;
   courseProvider?: {
+    id: string;
     companyName: string;
     logo?: string;
+    rating?: number;
+    verified: boolean;
   };
   instructor?: {
+    id: string;
     firstName: string;
     lastName: string;
     profilePicture?: string;
+    rating?: number;
+    experience?: number;
+    specialization?: string;
   };
+  category: {
+    id: number;
+    name: string;
+    slug: string;
+    icon?: string;
+    color?: string;
+  };
+  roadmap?: {
+    id: number;
+    title: string;
+    slug: string;
+  };
+  enrolledStudentsCount: number;
   createdAt: string;
-  // Add category field for filtering (you might need to add this to your database)
-  category?: string;
+  updatedAt?: string;
+};
+
+// API Response type
+type ApiResponse = {
+  success: boolean;
+  message: string;
+  data: Course[];
+  pagination?: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
 };
 
 type CourseCardProps = {
@@ -86,21 +135,28 @@ const CourseCard: React.FC<CourseCardProps> = ({
                 <Image
                   src={item.courseImage}
                   alt={item.title}
-                  width={100} // set to your desired width
-                  height={100}
+                  width={192}
+                  height={112}
                   className="object-cover w-full h-full rounded-lg"
                 />
               ) : (
-                <span className="text-sm font-bold text-gray-400">
-                  {item.title}
-                </span>
+                <div className="flex flex-col items-center justify-center text-center p-2">
+                  <div className="text-2xl mb-1">📚</div>
+                  <span className="text-xs font-bold text-gray-600 line-clamp-2">
+                    {item.title}
+                  </span>
+                </div>
               )}
             </div>
             <div className="absolute top-2 right-2 bg-white/90 px-2 py-1 rounded-full flex items-center gap-1">
               <Star className="w-3 h-3 fill-current text-yellow-500" />
               <span className="text-xs font-bold text-gray-700">
-                {item.rating ?? "4.8"}
+                {item.rating ? item.rating.toFixed(1) : "4.8"}
               </span>
+            </div>
+            {/* Course level badge */}
+            <div className="absolute top-2 left-2 bg-teal-500 text-white px-2 py-1 rounded-full">
+              <span className="text-xs font-bold">{item.level}</span>
             </div>
           </div>
 
@@ -110,17 +166,25 @@ const CourseCard: React.FC<CourseCardProps> = ({
                 {item.title}
               </h3>
               <p className="text-sm text-gray-600 mb-2">
-                {item.courseProvider?.companyName}
+                {item.courseProvider?.companyName || "Unknown Provider"}
               </p>
+              {item.shortDescription && (
+                <p className="text-sm text-gray-500 mb-3 line-clamp-2">
+                  {item.shortDescription}
+                </p>
+              )}
               <div className="flex flex-wrap gap-2 mb-3">
                 <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
                   {item.level}
                 </span>
                 <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                  {item.duration} hours
+                  {item.duration}h
+                </span>
+                <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">
+                  {item.courseType}
                 </span>
                 {item.instructor && (
-                  <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">
+                  <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded-full">
                     {item.instructor.firstName} {item.instructor.lastName}
                   </span>
                 )}
@@ -128,9 +192,14 @@ const CourseCard: React.FC<CourseCardProps> = ({
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-xl font-bold text-teal-600">
-                {item.courseFee} EGP
-              </span>
+              <div className="flex flex-col">
+                <span className="text-xl font-bold text-teal-600">
+                  {parseFloat(item.courseFee).toLocaleString()} EGP
+                </span>
+                <span className="text-xs text-gray-500">
+                  {item.enrolledStudentsCount} students enrolled
+                </span>
+              </div>
               <Heart className="w-5 h-5 text-gray-400 hover:text-red-500 transition-colors" />
             </div>
           </div>
@@ -150,21 +219,28 @@ const CourseCard: React.FC<CourseCardProps> = ({
             <Image
               src={item.courseImage}
               alt={item.title}
-              width={100} // set to your desired width
-              height={100}
+              width={400}
+              height={300}
               className="object-cover w-full h-full rounded-lg"
             />
           ) : (
-            <span className="text-sm font-bold text-gray-400">
-              {item.title}
-            </span>
+            <div className="flex flex-col items-center justify-center text-center p-4">
+              <div className="text-3xl mb-2">📚</div>
+              <span className="text-sm font-bold text-gray-600 line-clamp-2">
+                {item.title}
+              </span>
+            </div>
           )}
         </div>
         <div className="absolute top-2 right-2 bg-white/90 px-2 py-1 rounded-full flex items-center gap-1">
           <Star className="w-3 h-3 fill-current text-yellow-500" />
           <span className="text-xs font-bold text-gray-700">
-            {item.rating ?? "4.8"}
+            {item.rating ? item.rating.toFixed(1) : "4.8"}
           </span>
+        </div>
+        {/* Course level badge */}
+        <div className="absolute top-2 left-2 bg-teal-500 text-white px-2 py-1 rounded-full">
+          <span className="text-xs font-bold">{item.level}</span>
         </div>
       </div>
 
@@ -173,7 +249,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
           {item.title}
         </h3>
         <p className="text-sm text-gray-600">
-          {item.courseProvider?.companyName}
+          {item.courseProvider?.companyName || "Unknown Provider"}
         </p>
 
         <div className="flex flex-wrap gap-1">
@@ -181,14 +257,22 @@ const CourseCard: React.FC<CourseCardProps> = ({
             {item.level}
           </span>
           <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-            {item.duration} hours
+            {item.duration}h
+          </span>
+          <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">
+            {item.courseType}
           </span>
         </div>
 
         <div className="flex items-center justify-between pt-2">
-          <span className="text-lg font-bold text-teal-600">
-            {item.courseFee} EGP
-          </span>
+          <div className="flex flex-col">
+            <span className="text-lg font-bold text-teal-600">
+              {parseFloat(item.courseFee).toLocaleString()} EGP
+            </span>
+            <span className="text-xs text-gray-500">
+              {item.enrolledStudentsCount} students
+            </span>
+          </div>
           <Heart className="w-5 h-5 text-gray-400 hover:text-red-500 transition-colors" />
         </div>
       </div>
@@ -206,6 +290,7 @@ type FilterBarProps = {
   viewMode: "grid" | "list";
   onViewModeChange: (mode: "grid" | "list") => void;
   totalCourses: number;
+  allCoursesCount: number;
 };
 
 const FilterBar: React.FC<FilterBarProps> = ({
@@ -218,6 +303,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
   viewMode,
   onViewModeChange,
   totalCourses,
+  allCoursesCount,
 }) => {
   const [showSortDropdown, setShowSortDropdown] = useState(false);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
@@ -233,7 +319,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
               type="text"
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="Search courses..."
+              placeholder="Search courses, instructors, or providers..."
               className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none text-sm"
             />
           </div>
@@ -276,9 +362,10 @@ const FilterBar: React.FC<FilterBarProps> = ({
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-600">
-              {totalCourses} courses
-            </span>
+            <div className="text-sm text-gray-600">
+              Showing <span className="font-semibold">{totalCourses}</span> of{" "}
+              <span className="font-semibold">{allCoursesCount}</span> courses
+            </div>
 
             {/* Sort Dropdown */}
             <div className="relative">
@@ -359,9 +446,9 @@ const FilterBar: React.FC<FilterBarProps> = ({
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">
-                  {totalCourses} courses
-                </span>
+                <div className="text-sm text-gray-600">
+                  {totalCourses} of {allCoursesCount} courses
+                </div>
 
                 <div className="flex items-center gap-2">
                   <div className="relative">
@@ -423,15 +510,78 @@ const FilterBar: React.FC<FilterBarProps> = ({
   );
 };
 
-const NoResults: React.FC = () => (
+const NoResults: React.FC<{ hasFilters: boolean }> = ({ hasFilters }) => (
   <div className="flex flex-col items-center justify-center py-20">
     <div className="text-6xl mb-4">📚</div>
-    <h3 className="text-xl font-bold text-gray-700 mb-2">No courses found</h3>
+    <h3 className="text-xl font-bold text-gray-700 mb-2">
+      {hasFilters ? "No courses found" : "No courses available"}
+    </h3>
     <p className="text-gray-500 text-center">
-      Try adjusting your search or filter criteria
+      {hasFilters
+        ? "Try adjusting your search or filter criteria"
+        : "No courses are currently available in the database"}
     </p>
   </div>
 );
+
+const LoadingSkeleton: React.FC<{ viewMode: "grid" | "list" }> = ({
+  viewMode,
+}) => {
+  if (viewMode === "list") {
+    return (
+      <div className="space-y-4">
+        {[...Array(6)].map((_, i) => (
+          <div
+            key={i}
+            className="bg-white rounded-lg shadow-md p-4 sm:p-6 border border-gray-100"
+          >
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="w-full sm:w-48 h-32 sm:h-28 bg-gray-200 rounded-lg animate-pulse"></div>
+              <div className="flex-1 space-y-3">
+                <div className="h-6 bg-gray-200 rounded animate-pulse"></div>
+                <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4"></div>
+                <div className="h-4 bg-gray-200 rounded animate-pulse w-1/2"></div>
+                <div className="flex gap-2">
+                  <div className="h-6 bg-gray-200 rounded-full animate-pulse w-16"></div>
+                  <div className="h-6 bg-gray-200 rounded-full animate-pulse w-12"></div>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="h-6 bg-gray-200 rounded animate-pulse w-20"></div>
+                  <div className="w-5 h-5 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+      {[...Array(12)].map((_, i) => (
+        <div
+          key={i}
+          className="bg-white rounded-lg shadow-md p-3 sm:p-4 border border-gray-100"
+        >
+          <div className="w-full h-40 sm:h-48 bg-gray-200 rounded-lg animate-pulse mb-3"></div>
+          <div className="space-y-2">
+            <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+            <div className="h-3 bg-gray-200 rounded animate-pulse w-3/4"></div>
+            <div className="flex gap-1">
+              <div className="h-6 bg-gray-200 rounded-full animate-pulse w-16"></div>
+              <div className="h-6 bg-gray-200 rounded-full animate-pulse w-12"></div>
+            </div>
+            <div className="flex items-center justify-between pt-2">
+              <div className="h-5 bg-gray-200 rounded animate-pulse w-20"></div>
+              <div className="w-5 h-5 bg-gray-200 rounded animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 // Main Component
 const CoursesPage: React.FC = () => {
@@ -441,44 +591,71 @@ const CoursesPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
 
   useEffect(() => {
     async function fetchCourses() {
       setLoading(true);
-      try {
-        console.log("Fetching courses from API...");
-        const res = await fetch("/api/courses");
-        console.log("API Response status:", res.status);
+      setError(null);
 
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
+      try {
+        console.log("Fetching all courses from backend...");
+
+        // Fetch all courses without pagination limits
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL || "https://tariky-backend-o26r.vercel.app"}/api/courses?limit=10000`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        console.log("API Response status:", response.status);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data = await res.json();
-        console.log("Fetched courses data:", data);
-        console.log("Number of courses:", data.length);
+        const apiResponse: ApiResponse = await response.json();
+        console.log("API Response:", apiResponse);
 
-        setCourses(data);
-      } catch (error) {
-        console.error("Error fetching courses:", error);
+        if (apiResponse.success) {
+          console.log("Successfully fetched courses:", apiResponse.data.length);
+          setCourses(apiResponse.data);
+        } else {
+          throw new Error(apiResponse.message || "Failed to fetch courses");
+        }
+      } catch (err) {
+        console.error("Error fetching courses:", err);
+        setError(
+          err instanceof Error
+            ? err.message
+            : "An error occurred while fetching courses"
+        );
+        setCourses([]);
       } finally {
         setLoading(false);
       }
     }
+
     fetchCourses();
   }, []);
 
   // Filter and sort courses
   let filteredCourses = courses.filter((course) => {
     const matchesCategory =
-      selectedCategory === "All" ||
-      course.category === selectedCategory ||
-      course.courseType?.toLowerCase().includes(selectedCategory.toLowerCase());
+      selectedCategory === "All" || course.category.slug === selectedCategory;
 
     const matchesSearch =
+      searchTerm === "" ||
       course.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.shortDescription
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
       course.courseProvider?.companyName
         ?.toLowerCase()
         .includes(searchTerm.toLowerCase()) ||
@@ -487,7 +664,8 @@ const CoursesPage: React.FC = () => {
         .includes(searchTerm.toLowerCase()) ||
       course.instructor?.lastName
         ?.toLowerCase()
-        .includes(searchTerm.toLowerCase());
+        .includes(searchTerm.toLowerCase()) ||
+      course.category.name?.toLowerCase().includes(searchTerm.toLowerCase());
 
     return matchesCategory && matchesSearch;
   });
@@ -502,6 +680,8 @@ const CoursesPage: React.FC = () => {
         return (b.rating ?? 0) - (a.rating ?? 0);
       case "popular":
         return (b.totalRatings ?? 0) - (a.totalRatings ?? 0);
+      case "students":
+        return (b.enrolledStudentsCount ?? 0) - (a.enrolledStudentsCount ?? 0);
       case "oldest":
         return (
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
@@ -518,6 +698,28 @@ const CoursesPage: React.FC = () => {
     router.push(`/courses/${slug}`);
   };
 
+  const hasFilters = selectedCategory !== "All" || searchTerm !== "";
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-6">
+          <div className="text-6xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">
+            Error Loading Courses
+          </h2>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-teal-500 text-white px-6 py-2 rounded-lg hover:bg-teal-600 transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <FilterBar
@@ -530,34 +732,16 @@ const CoursesPage: React.FC = () => {
         viewMode={viewMode}
         onViewModeChange={setViewMode}
         totalCourses={filteredCourses.length}
+        allCoursesCount={courses.length}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {loading ? (
-          <div className="flex justify-center py-20">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-500"></div>
-          </div>
+          <LoadingSkeleton viewMode={viewMode} />
         ) : courses.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20">
-            <div className="text-6xl mb-4">📚</div>
-            <h3 className="text-xl font-bold text-gray-700 mb-2">
-              No courses found
-            </h3>
-            <p className="text-gray-500 text-center">
-              {searchTerm || selectedCategory !== "All"
-                ? "Try adjusting your search or filter criteria"
-                : "No courses available in the database"}
-            </p>
-            <button
-              onClick={() => {
-                console.log("Current courses state:", courses);
-                console.log("Filtered courses:", filteredCourses);
-              }}
-              className="mt-4 px-4 py-2 bg-teal-500 text-white rounded-lg text-sm"
-            >
-              Debug: Log Course Data
-            </button>
-          </div>
+          <NoResults hasFilters={hasFilters} />
+        ) : filteredCourses.length === 0 ? (
+          <NoResults hasFilters={hasFilters} />
         ) : (
           <div
             className={
