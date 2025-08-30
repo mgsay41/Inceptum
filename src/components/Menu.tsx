@@ -43,11 +43,11 @@ const menuItems = [
   {
     title: "OTHER",
     items: [
-      {
-        icon: <FaUser size={20} />, // Icon for Profile
-        label: "Profile",
-        href: "/profile",
-      },
+      // {
+      //   icon: <FaUser size={20} />, // Icon for Profile
+      //   label: "Profile",
+      //   href: "/profile",
+      // },
       // {
       //   icon: <FaCog size={20} />, // Icon for Settings
       //   label: "Settings",

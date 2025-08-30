@@ -3,11 +3,25 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { SignedIn, SignedOut, UserButton, SignInButton } from "@clerk/nextjs";
+import {
+  SignedIn,
+  SignedOut,
+  UserButton,
+  SignInButton,
+  useAuth,
+} from "@clerk/nextjs";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const router = useRouter();
+  const { isSignedIn } = useAuth();
+
+  useEffect(() => {
+    // Redirect to /home when user logs in
+    if (isSignedIn) {
+      router.push("/home");
+    }
+  }, [isSignedIn, router]);
 
   useEffect(() => {
     const handleScroll = () => {

@@ -3,6 +3,7 @@ module.exports = {
   images: {
     domains: [
       "images.pexels.com",
+      "images.remotePatterns.com",
       "picsum.photos",
       "loremflickr.com",
       "images.unsplash.com",

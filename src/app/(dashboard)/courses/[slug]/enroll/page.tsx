@@ -172,9 +172,7 @@ const CourseEnrollmentPage: React.FC = () => {
               </h2>
               <p className="text-gray-600 leading-relaxed max-w-2xl mx-auto">
                 Excellent choice! To secure your spot in this course, please
-                complete the payment process using the link below. Once payment
-                is confirmed, our team will contact you shortly with detailed
-                course information and next steps.
+                complete the payment process using the link below.
               </p>
             </div>
 
@@ -258,7 +256,7 @@ const CourseEnrollmentPage: React.FC = () => {
 
               {course.paymentLink ? (
                 <button
-                  onClick={handlePaymentClick}
+                  onClick={() => course.paymentLink && (window.location.href = course.paymentLink)}
                   className="inline-flex items-center justify-center gap-3 bg-teal-500 hover:bg-teal-600 text-white font-semibold py-4 px-8 rounded-lg transition-colors transform hover:scale-105 duration-200 shadow-lg"
                 >
                   <CreditCard className="w-5 h-5" />
