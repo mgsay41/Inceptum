@@ -353,13 +353,13 @@ const CourseEnrollmentPage: React.FC = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a
-              href="mailto:support@example.com"
+              href="mailto:Inceptum.egypt@gmail.com"
               className="inline-flex items-center justify-center gap-2 bg-white text-gray-700 font-medium py-2 px-4 rounded-lg hover:bg-gray-100 transition-colors border"
             >
               Email Support
             </a>
             <a
-              href="tel:+1234567890"
+              href="tel:+201065659008"
               className="inline-flex items-center justify-center gap-2 bg-white text-gray-700 font-medium py-2 px-4 rounded-lg hover:bg-gray-100 transition-colors border"
             >
               Call Support
