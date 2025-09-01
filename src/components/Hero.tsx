@@ -7,7 +7,7 @@ const Hero = () => {
   const router = useRouter(); // Initialize router
 
   const handleGetStarted = () => {
-    router.push("/signin"); // Redirect to sign-in page
+    router.push("/home"); // Redirect to sign-in page
   };
 
   return (
