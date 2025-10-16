@@ -375,6 +375,35 @@ const CoursesApp: React.FC = () => {
   // Fetch user from Clerk
   const { user, isLoaded } = useUser();
 
+  // Sync Clerk user with backend database
+  useEffect(() => {
+    async function syncUser() {
+      if (!isLoaded || !user) return;
+
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://tariky-backend-o26r.vercel.app';
+        await fetch(
+          `${apiUrl}/api/users/create-or-update`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              clerkId: user.id,
+              email: user.primaryEmailAddress?.emailAddress,
+              firstName: user.firstName || '',
+              lastName: user.lastName || '',
+              profilePhoto: user.imageUrl
+            })
+          }
+        );
+      } catch (error) {
+        console.error('Error syncing user:', error);
+      }
+    }
+
+    syncUser();
+  }, [user, isLoaded]);
+
   // Featured courses: pick top 3 by rating or enrollment
   const featuredCourses = courses
     .sort((a, b) => (b.rating || 0) - (a.rating || 0))

@@ -11,17 +11,6 @@ const CourseEnrollmentForm = ({ courseId, onSuccess, onCancel }: EnrollmentFormP
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [formData, setFormData] = useState({
-    name: '',
-    phoneNumber: '',
-    college: '',
-    semester: '',
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,24 +18,31 @@ const CourseEnrollmentForm = ({ courseId, onSuccess, onCancel }: EnrollmentFormP
     setError('');
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://tariky-backend-o26r.vercel.app'}/api/courses/${courseId}/enroll`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId: user?.id,
-          ...formData
-        }),
-      });
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://tariky-backend-o26r.vercel.app';
+      const response = await fetch(
+        `${apiUrl}/api/courses/${courseId}/enroll`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ clerkId: user?.id })
+        }
+      );
+
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error('Failed to enroll');
+        throw new Error(data.message || 'Failed to enroll');
       }
 
-      onSuccess();
+      // Enrollment successful - redirect to payment if link exists
+      if (data.data?.course?.paymentLink) {
+        window.location.href = data.data.course.paymentLink;
+      } else {
+        // Fallback if no payment link
+        onSuccess();
+      }
     } catch (err) {
-      setError('Failed to enroll in course. Please try again.');
+      setError(err instanceof Error ? err.message : 'Enrollment failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -54,56 +50,22 @@ const CourseEnrollmentForm = ({ courseId, onSuccess, onCancel }: EnrollmentFormP
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-xl font-bold mb-4">Course Enrollment</h2>
-      
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
-        />
-      </div>
+      <h2 className="text-xl font-bold">Confirm Enrollment</h2>
+      <p className="text-sm text-gray-600">
+        You will be redirected to the payment page after confirming enrollment.
+      </p>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-        <input
-          type="tel"
-          name="phoneNumber"
-          value={formData.phoneNumber}
-          onChange={handleChange}
-          required
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">College</label>
-        <input
-          type="text"
-          name="college"
-          value={formData.college}
-          onChange={handleChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Semester</label>
-        <input
-          type="text"
-          name="semester"
-          value={formData.semester}
-          onChange={handleChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
-        />
+      <div className="bg-blue-50 border border-blue-200 p-4 rounded-md">
+        <p className="text-sm text-blue-800">
+          <strong>Name:</strong> {user?.fullName}<br/>
+          <strong>Email:</strong> {user?.primaryEmailAddress?.emailAddress}
+        </p>
       </div>
 
       {error && (
-        <div className="text-red-500 text-sm">{error}</div>
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+          {error}
+        </div>
       )}
 
       <div className="flex justify-end gap-3 mt-6">
@@ -120,7 +82,7 @@ const CourseEnrollmentForm = ({ courseId, onSuccess, onCancel }: EnrollmentFormP
           className="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700 disabled:opacity-50"
           disabled={loading}
         >
-          {loading ? 'Enrolling...' : 'Enroll Now'}
+          {loading ? 'Processing...' : 'Enroll & Pay'}
         </button>
       </div>
     </form>

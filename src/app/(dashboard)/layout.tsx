@@ -1,10 +1,13 @@
 "use client"; // Ensure this is a client-side component
 
 import { useState, useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
 import Menu from "@/components/Menu";
 import Image from "next/image";
 import Link from "next/link";
 import BottomNav from "@/components/BottomNav"; // Import the bottom nav
+import OnboardingModal from "@/components/OnboardingModal";
+import { useOnboarding } from "@/hooks/useOnboarding";
 import { usePathname } from "next/navigation"; // Add this import
 
 export default function DashboardLayout({
@@ -14,6 +17,9 @@ export default function DashboardLayout({
 }>) {
   const [isMobile, setIsMobile] = useState(false);
   const pathname = usePathname(); // Get current path
+  const { user } = useUser();
+  const { needsOnboarding, loading } = useOnboarding();
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   // Detect screen size changes (mobile vs desktop)
   useEffect(() => {
@@ -28,6 +34,13 @@ export default function DashboardLayout({
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  // Show onboarding modal when needed
+  useEffect(() => {
+    if (!loading && needsOnboarding) {
+      setShowOnboarding(true);
+    }
+  }, [loading, needsOnboarding]);
   return (
     <div className="h-screen flex">
       {/* LEFT SIDEBAR */}
@@ -77,6 +90,14 @@ export default function DashboardLayout({
       </div>
       {/* Bottom Navigation (Only shown on mobile) */}
       {isMobile && <BottomNav />} {/* Display BottomNav if mobile */}
+
+      {/* Onboarding Modal */}
+      {showOnboarding && user && (
+        <OnboardingModal
+          clerkUser={user}
+          onComplete={() => setShowOnboarding(false)}
+        />
+      )}
     </div>
   );
 }
