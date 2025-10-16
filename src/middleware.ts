@@ -1,12 +1,20 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 const isProtectedRoute = createRouteMatcher([
-  "/profile(.*)",
-  "/courses/*/enroll(.*)", // Protect enrollment routes
+  "/profile",
+  "/profile/(.*)",
 ]);
 
+const isEnrollmentRoute = (pathname: string) => {
+  return /^\/courses\/[^\/]+\/enroll/.test(pathname);
+};
+
 export default clerkMiddleware(async (auth, req) => {
-  if (isProtectedRoute(req)) await auth.protect();
+  const { pathname } = req.nextUrl;
+
+  if (isProtectedRoute(req) || isEnrollmentRoute(pathname)) {
+    await auth.protect();
+  }
 });
 
 export const config = {
