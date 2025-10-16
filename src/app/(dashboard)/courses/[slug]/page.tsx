@@ -20,6 +20,7 @@ import {
   Building,
 } from "lucide-react";
 import { useRouter, useParams } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 
 // Types matching your backend response
 type Course = {
@@ -169,6 +170,7 @@ const CourseDetailPage: React.FC = () => {
   const router = useRouter();
   const params = useParams();
   const slug = params?.slug as string;
+  const { isSignedIn } = useAuth();
 
   useEffect(() => {
     if (!slug) return;
@@ -223,6 +225,11 @@ const CourseDetailPage: React.FC = () => {
   }, [slug]);
 
   const handleEnroll = () => {
+    if (!isSignedIn) {
+      // Redirect to sign-in page with return URL
+      router.push(`/sign-in?redirect_url=${encodeURIComponent(`/courses/${slug}/enroll`)}`);
+      return;
+    }
     router.push(`/courses/${slug}/enroll`);
   };
 
