@@ -17,7 +17,7 @@ interface OnboardingModalProps {
 
 const onboardingSchema = z.object({
   phoneNumber: z.string()
-    .regex(/^\+251[0-9]{9}$/, "Invalid Ethiopian phone number. Format: +251912345678"),
+    .regex(/^\+20[0-9]{10}$/, "Invalid Egyptian phone number. Format: +201234567890"),
   university: z.string().min(2, "University name is required"),
   college: z.string().min(2, "College name is required"),
   semester: z.string().min(1, "Semester is required")
@@ -84,14 +84,14 @@ const OnboardingModal = ({ clerkUser, onComplete }: OnboardingModalProps) => {
             <Input
               id="phoneNumber"
               type="tel"
-              placeholder="+251912345678"
+              placeholder="+201234567890"
               {...register('phoneNumber')}
               className={errors.phoneNumber ? 'border-red-500' : ''}
             />
             {errors.phoneNumber && (
               <p className="text-sm text-red-500">{errors.phoneNumber.message}</p>
             )}
-            <p className="text-xs text-gray-500">Enter your Ethiopian phone number starting with +251</p>
+            <p className="text-xs text-gray-500">Enter your Egyptian phone number starting with +20</p>
           </div>
 
           <div className="space-y-2">
